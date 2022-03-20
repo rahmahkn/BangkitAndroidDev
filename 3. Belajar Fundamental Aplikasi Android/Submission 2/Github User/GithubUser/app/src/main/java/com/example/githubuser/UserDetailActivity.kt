@@ -5,13 +5,9 @@ import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import android.widget.ImageView
 import android.widget.TextView
+import java.lang.StringBuilder
 
 class UserDetailActivity : AppCompatActivity() {
-
-    companion object {
-        const val EXTRA_USER = "extra_user"
-    }
-
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_user_detail)
@@ -29,8 +25,12 @@ class UserDetailActivity : AppCompatActivity() {
         user.avatar?.let { tvAvatar.setImageResource(it) }
         tvUsername.text = user.username
         tvName.text = user.name
-        tvLocation.text = "Location: ${user.location}"
-        tvCompany.text = "Company: ${user.company}"
-        tvFollRepo.text = "${user.followers} followers | ${user.following} following | ${user.repository} repositories"
+        tvLocation.text = StringBuilder("Location: ").append(user.location)
+        tvCompany.text = StringBuilder("Company: ").append(user.company)
+        tvFollRepo.text = StringBuilder(user.followers).append(" followers | ").append(user.following).append(" following | ").append(user.repository).append(" repository")
+    }
+
+    companion object {
+        const val EXTRA_USER = "extra_user"
     }
 }

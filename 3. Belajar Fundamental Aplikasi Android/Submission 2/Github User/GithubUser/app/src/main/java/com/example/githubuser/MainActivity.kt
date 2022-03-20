@@ -51,6 +51,9 @@ class MainActivity : AppCompatActivity() {
                 )
                 listUser.add(user)
             }
+
+            dataAvatar.recycle()
+
             return listUser
         }
 

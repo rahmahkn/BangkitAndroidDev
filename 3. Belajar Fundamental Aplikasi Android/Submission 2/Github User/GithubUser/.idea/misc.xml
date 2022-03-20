@@ -1,0 +1,18 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project version="4">
+  <component name="DesignSurface">
+    <option name="filePathToZoomLevelMap">
+      <map>
+        <entry key="..\:/2. Online Course/Bangkit/BangkitAndroidDev/3. Belajar Fundamental Aplikasi Android/Submission 1/Github User/GithubUser/app/src/main/res/layout/activity_main.xml" value="0.19021739130434784" />
+        <entry key="..\:/2. Online Course/Bangkit/BangkitAndroidDev/3. Belajar Fundamental Aplikasi Android/Submission 1/Github User/GithubUser/app/src/main/res/layout/activity_user_detail.xml" value="0.19021739130434784" />
+        <entry key="..\:/2. Online Course/Bangkit/BangkitAndroidDev/3. Belajar Fundamental Aplikasi Android/Submission 1/Github User/GithubUser/app/src/main/res/layout/item_row_user.xml" value="0.19021739130434784" />
+      </map>
+    </option>
+  </component>
+  <component name="ProjectRootManager" version="2" languageLevel="JDK_11" default="true" project-jdk-name="Android Studio default JDK" project-jdk-type="JavaSDK">
+    <output url="file://$PROJECT_DIR$/build/classes" />
+  </component>
+  <component name="ProjectType">
+    <option name="id" value="Android" />
+  </component>
+</project>
