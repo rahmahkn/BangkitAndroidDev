@@ -1,4 +1,4 @@
-package com.example.githubuser
+package com.example.githubuser.network
 
 import android.os.Parcel
 import android.os.Parcelable

@@ -1,10 +1,10 @@
 package com.example.githubuser
 
-import android.content.Intent.EXTRA_USER
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import android.widget.ImageView
 import android.widget.TextView
+import com.example.githubuser.network.User
 import java.lang.StringBuilder
 
 class UserDetailActivity : AppCompatActivity() {
