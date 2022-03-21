@@ -1,11 +1,10 @@
 package com.example.githubuser
 
-import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import android.widget.ImageView
 import android.widget.TextView
+import androidx.appcompat.app.AppCompatActivity
 import com.example.githubuser.network.User
-import java.lang.StringBuilder
 
 class UserDetailActivity : AppCompatActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -27,7 +26,9 @@ class UserDetailActivity : AppCompatActivity() {
         tvName.text = user.name
         tvLocation.text = StringBuilder("Location: ").append(user.location)
         tvCompany.text = StringBuilder("Company: ").append(user.company)
-        tvFollRepo.text = StringBuilder(user.followers).append(" followers | ").append(user.following).append(" following | ").append(user.repository).append(" repository")
+        tvFollRepo.text =
+            StringBuilder(user.followers).append(" followers | ").append(user.following)
+                .append(" following | ").append(user.repository).append(" repository")
     }
 
     companion object {

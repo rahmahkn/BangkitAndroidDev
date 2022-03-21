@@ -1,16 +1,19 @@
 package com.example.githubuser
 
-import android.content.Intent
-import androidx.appcompat.app.AppCompatActivity
+import android.app.SearchManager
+import android.content.Context
 import android.os.Bundle
 import android.util.Log
+import android.view.Menu
+import android.view.MenuItem
 import android.view.View
+import android.widget.SearchView
 import android.widget.Toast
+import androidx.appcompat.app.AppCompatActivity
 import androidx.recyclerview.widget.DividerItemDecoration
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.example.githubuser.databinding.ActivityMainBinding
-import com.example.githubuser.network.SearchItem
 import com.example.githubuser.network.SearchResponse
 import com.example.githubuser.network.User
 import com.example.githubuser.network.search.SearchApiConfig
@@ -22,11 +25,10 @@ import retrofit2.Response
 class MainActivity : AppCompatActivity() {
     private lateinit var binding: ActivityMainBinding
     private lateinit var rvUsers: RecyclerView
-    private var list = ArrayList<SearchItem>()
 
     companion object {
         private const val TAG = "MainActivity"
-        private  const val USERNAME = "sidiqpermana"
+        private const val USERNAME = "sidiqpermana"
     }
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -34,19 +36,51 @@ class MainActivity : AppCompatActivity() {
         binding = ActivityMainBinding.inflate(layoutInflater)
         setContentView(binding.root)
 
+        rvUsers = findViewById(R.id.rv_users)
+
         val layoutManager = LinearLayoutManager(this)
         binding.rvUsers.layoutManager = layoutManager
 
         val itemDecoration = DividerItemDecoration(this, layoutManager.orientation)
         binding.rvUsers.addItemDecoration(itemDecoration)
-
-        showSearchResults()
-//        showRecyclerList()
     }
 
-    private fun showSearchResults() {
+    override fun onCreateOptionsMenu(menu: Menu): Boolean {
+        menuInflater.inflate(R.menu.option_menu, menu)
+
+        val searchManager = getSystemService(Context.SEARCH_SERVICE) as SearchManager
+        val searchView = menu.findItem(R.id.menu_search).actionView as SearchView
+
+        searchView.setSearchableInfo(searchManager.getSearchableInfo(componentName))
+        searchView.queryHint = "Search User"
+        searchView.setOnQueryTextListener(object : SearchView.OnQueryTextListener {
+            override fun onQueryTextSubmit(query: String): Boolean {
+                Toast.makeText(this@MainActivity, "Cari " + query, Toast.LENGTH_SHORT).show()
+                showSearchResults(query)
+                searchView.clearFocus()
+                return true
+            }
+
+            override fun onQueryTextChange(p0: String?): Boolean {
+                return false
+            }
+        })
+
+        return true
+    }
+
+    override fun onOptionsItemSelected(item: MenuItem): Boolean {
+        when (item.itemId) {
+            R.id.menu_search -> {
+                Toast.makeText(this, "Klik search bar", Toast.LENGTH_SHORT).show()
+            }
+        }
+        return super.onOptionsItemSelected(item)
+    }
+
+    private fun showSearchResults(query: String) {
         showLoading(true)
-        val client = SearchApiConfig.getSearchApiService().getSearch(USERNAME)
+        val client = SearchApiConfig.getSearchApiService().getSearch(query)
         client.enqueue(object : Callback<SearchResponse> {
             override fun onResponse(
                 call: Call<SearchResponse>,
@@ -56,10 +90,14 @@ class MainActivity : AppCompatActivity() {
                 if (response.isSuccessful) {
                     val responseBody = response.body()
                     if (responseBody != null) {
-                        setSearchData(responseBody.items as List<SearchItem>)
+                        Log.d("Jumlah response: ", responseBody.items.size.toString())
+
+                        rvUsers.layoutManager = LinearLayoutManager(this@MainActivity)
+                        val listUserAdapter = SearchAdapter(responseBody.items)
+                        rvUsers.adapter = listUserAdapter
                     }
                 } else {
-                    Log.e(TAG, "onFailre: ${response.message()}")
+                    Log.e(TAG, "onFailure: ${response.message()}")
                 }
             }
 
@@ -70,46 +108,12 @@ class MainActivity : AppCompatActivity() {
         })
     }
 
-    private fun setSearchData(users: List<SearchItem>) {
-        val listUser = ArrayList<SearchItem>()
-        for (user in users) {
-            listUser.add(
-                SearchItem(user.login, user.avatar_url, user.name)
-            )
-        }
-
-//        val adapter = SearchAdapter(listUser)
-//        binding.rvUsers.adapter = adapter
-
-        rvUsers.layoutManager = LinearLayoutManager(this)
-        val listUserAdapter = SearchAdapter(list)
-        rvUsers.adapter = listUserAdapter
-    }
-
     private fun showLoading(isLoading: Boolean) {
         if (isLoading) {
             binding.progressBar.visibility = View.VISIBLE
         } else {
             binding.progressBar.visibility = View.GONE
         }
-    }
-
-    private fun showRecyclerList() {
-        rvUsers.layoutManager = LinearLayoutManager(this)
-        val listUserAdapter = SearchAdapter(list)
-        rvUsers.adapter = listUserAdapter
-
-//        listUserAdapter.setOnItemClickCallback(object : ListUserAdapter.OnItemClickCallback {
-//            override fun onItemClicked(data: User) {
-//                // Show the toast
-//                showSelectedUser(data)
-//
-//                // Move to detail user page using intent
-//                val moveUserIntent = Intent(this@MainActivity, UserDetailActivity::class.java)
-//                moveUserIntent.putExtra(UserDetailActivity.EXTRA_USER, data)
-//                startActivity(moveUserIntent)
-//            }
-//        })
     }
 
     private fun showSelectedUser(user: User) {

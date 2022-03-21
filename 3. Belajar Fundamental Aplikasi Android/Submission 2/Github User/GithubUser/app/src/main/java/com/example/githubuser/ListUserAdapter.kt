@@ -9,7 +9,8 @@ import androidx.recyclerview.widget.RecyclerView
 import com.example.githubuser.network.User
 
 // Adapter for list user
-class ListUserAdapter(private val listUser: ArrayList<User>) : RecyclerView.Adapter<ListUserAdapter.ListViewHolder>() {
+class ListUserAdapter(private val listUser: ArrayList<User>) :
+    RecyclerView.Adapter<ListUserAdapter.ListViewHolder>() {
     private lateinit var onItemClickCallback: OnItemClickCallback
 
     interface OnItemClickCallback {
@@ -21,7 +22,8 @@ class ListUserAdapter(private val listUser: ArrayList<User>) : RecyclerView.Adap
     }
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ListViewHolder {
-        val view: View = LayoutInflater.from(parent.context).inflate(R.layout.item_row_user, parent, false)
+        val view: View =
+            LayoutInflater.from(parent.context).inflate(R.layout.item_row_user, parent, false)
         return ListViewHolder(view)
     }
 

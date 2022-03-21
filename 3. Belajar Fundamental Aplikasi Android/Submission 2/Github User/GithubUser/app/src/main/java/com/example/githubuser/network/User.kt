@@ -1,8 +1,6 @@
 package com.example.githubuser.network
 
-import android.os.Parcel
 import android.os.Parcelable
-import kotlinx.parcelize.Parceler
 import kotlinx.parcelize.Parcelize
 
 @Parcelize
