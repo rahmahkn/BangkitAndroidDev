@@ -2,6 +2,7 @@ package com.example.githubuser
 
 import android.app.SearchManager
 import android.content.Context
+import android.content.Intent
 import android.os.Bundle
 import android.util.Log
 import android.view.Menu
@@ -14,9 +15,11 @@ import androidx.recyclerview.widget.DividerItemDecoration
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.example.githubuser.databinding.ActivityMainBinding
+import com.example.githubuser.network.SearchItem
 import com.example.githubuser.network.SearchResponse
 import com.example.githubuser.network.User
 import com.example.githubuser.network.search.SearchApiConfig
+import com.example.githubuser.ui.detail.UserDetailActivity
 import com.example.githubuser.ui.search.SearchAdapter
 import retrofit2.Call
 import retrofit2.Callback
@@ -95,6 +98,14 @@ class MainActivity : AppCompatActivity() {
                         rvUsers.layoutManager = LinearLayoutManager(this@MainActivity)
                         val listUserAdapter = SearchAdapter(responseBody.items)
                         rvUsers.adapter = listUserAdapter
+
+                        listUserAdapter.setOnItemClickCallback(object: SearchAdapter.OnItemClickCallback {
+                            override fun onItemClicked(data: SearchItem) {
+                                val moveDataWithIntent = Intent(this@MainActivity, UserDetailActivity::class.java)
+                                moveDataWithIntent.putExtra(UserDetailActivity.EXTRA_USER, data.login)
+                                startActivity(moveDataWithIntent)
+                            }
+                        })
                     }
                 } else {
                     Log.e(TAG, "onFailure: ${response.message()}")

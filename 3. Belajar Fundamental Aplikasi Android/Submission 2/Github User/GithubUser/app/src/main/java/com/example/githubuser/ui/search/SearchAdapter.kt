@@ -1,8 +1,10 @@
 package com.example.githubuser.ui.search
 
 import android.view.LayoutInflater
+import android.view.ScrollCaptureCallback
 import android.view.View
 import android.view.ViewGroup
+import android.widget.AdapterView
 import android.widget.ImageView
 import android.widget.TextView
 import androidx.recyclerview.widget.RecyclerView
@@ -12,6 +14,16 @@ import com.example.githubuser.network.SearchItem
 
 class SearchAdapter(private val listSearch: List<SearchItem>) :
     RecyclerView.Adapter<SearchAdapter.ViewHolder>() {
+    private lateinit var onItemClickCallback: OnItemClickCallback
+
+    interface OnItemClickCallback {
+        fun onItemClicked(data: SearchItem)
+    }
+
+    fun setOnItemClickCallback(onItemClickCallback: OnItemClickCallback) {
+        this.onItemClickCallback = onItemClickCallback
+    }
+
     override fun onCreateViewHolder(viewGroup: ViewGroup, viewType: Int) =
         ViewHolder(
             LayoutInflater.from(viewGroup.context).inflate(R.layout.item_row_user, viewGroup, false)
@@ -24,6 +36,10 @@ class SearchAdapter(private val listSearch: List<SearchItem>) :
 
         viewHolder.tvUsername.text = listSearch[position].login
         viewHolder.tvName.text = listSearch[position].name
+
+        viewHolder.itemView.setOnClickListener {
+            onItemClickCallback.onItemClicked(listSearch[position])
+        }
     }
 
     override fun getItemCount() = listSearch.size

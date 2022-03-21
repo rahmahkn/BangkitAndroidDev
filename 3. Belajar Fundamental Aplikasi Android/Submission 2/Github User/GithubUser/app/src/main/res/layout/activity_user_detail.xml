@@ -3,7 +3,8 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:padding="50dp">
+    android:padding="50dp"
+    tools:context=".ui.detail.UserDetailActivity">
 
     <ImageView
         android:id="@+id/tv_detail_avatar"
@@ -66,4 +67,12 @@
         android:layout_marginTop="5dp"
         android:textSize="12sp"
         tools:text="PT Google" />
+
+    <ProgressBar
+        android:id="@+id/progressBar2"
+        style="?android:attr/progressBarStyle"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:visibility="gone"
+        tools:visibility="visible" />
 </RelativeLayout>
