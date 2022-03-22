@@ -1,4 +1,4 @@
-package com.example.githubuser.ui.search
+package com.example.githubuser.ui.detail
 
 import android.view.LayoutInflater
 import android.view.ScrollCaptureCallback
@@ -10,19 +10,11 @@ import android.widget.TextView
 import androidx.recyclerview.widget.RecyclerView
 import com.bumptech.glide.Glide
 import com.example.githubuser.R
+import com.example.githubuser.network.FollowResponseItem
 import com.example.githubuser.network.SearchItem
 
-class SearchAdapter(private val listSearch: List<SearchItem>) :
-    RecyclerView.Adapter<SearchAdapter.ViewHolder>() {
-    private lateinit var onItemClickCallback: OnItemClickCallback
-
-    interface OnItemClickCallback {
-        fun onItemClicked(data: SearchItem)
-    }
-
-    fun setOnItemClickCallback(onItemClickCallback: OnItemClickCallback) {
-        this.onItemClickCallback = onItemClickCallback
-    }
+class FollowAdapter(private val listSearch: ArrayList<FollowResponseItem>) :
+    RecyclerView.Adapter<FollowAdapter.ViewHolder>() {
 
     override fun onCreateViewHolder(viewGroup: ViewGroup, viewType: Int) =
         ViewHolder(
@@ -31,14 +23,10 @@ class SearchAdapter(private val listSearch: List<SearchItem>) :
 
     override fun onBindViewHolder(viewHolder: ViewHolder, position: Int) {
         Glide.with(viewHolder.itemView.context)
-            .load(listSearch[position].avatar_url)
+            .load(listSearch[position].avatarUrl)
             .into(viewHolder.ivAvatar)
 
         viewHolder.tvUsername.text = listSearch[position].login
-
-        viewHolder.itemView.setOnClickListener {
-            onItemClickCallback.onItemClicked(listSearch[position])
-        }
     }
 
     override fun getItemCount() = listSearch.size
