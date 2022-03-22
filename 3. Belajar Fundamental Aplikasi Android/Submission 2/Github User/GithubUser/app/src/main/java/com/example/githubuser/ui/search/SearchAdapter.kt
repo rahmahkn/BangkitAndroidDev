@@ -35,7 +35,6 @@ class SearchAdapter(private val listSearch: List<SearchItem>) :
             .into(viewHolder.ivAvatar)
 
         viewHolder.tvUsername.text = listSearch[position].login
-        viewHolder.tvName.text = listSearch[position].name
 
         viewHolder.itemView.setOnClickListener {
             onItemClickCallback.onItemClicked(listSearch[position])

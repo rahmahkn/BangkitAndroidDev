@@ -13,7 +13,4 @@ data class SearchItem(
 
     @field:SerializedName("avatar_url")
     val avatar_url: String,
-
-    @field:SerializedName("name")
-    val name: String
 )
