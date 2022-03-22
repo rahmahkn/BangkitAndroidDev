@@ -1,17 +1,14 @@
 package com.example.githubuser.ui.detail
 
 import android.view.LayoutInflater
-import android.view.ScrollCaptureCallback
 import android.view.View
 import android.view.ViewGroup
-import android.widget.AdapterView
 import android.widget.ImageView
 import android.widget.TextView
 import androidx.recyclerview.widget.RecyclerView
 import com.bumptech.glide.Glide
 import com.example.githubuser.R
 import com.example.githubuser.network.FollowResponseItem
-import com.example.githubuser.network.SearchItem
 
 class FollowAdapter(private val listSearch: ArrayList<FollowResponseItem>) :
     RecyclerView.Adapter<FollowAdapter.ViewHolder>() {

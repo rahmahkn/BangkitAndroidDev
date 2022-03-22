@@ -1,60 +1,90 @@
 package com.example.githubuser.ui.detail
 
 import android.os.Bundle
-import androidx.fragment.app.Fragment
+import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.widget.ProgressBar
+import androidx.fragment.app.Fragment
+import androidx.recyclerview.widget.LinearLayoutManager
+import androidx.recyclerview.widget.RecyclerView
 import com.example.githubuser.R
+import com.example.githubuser.network.FollowResponseItem
+import com.example.githubuser.network.follow.FollowApiConfig
+import retrofit2.Call
+import retrofit2.Callback
+import retrofit2.Response
 
-// TODO: Rename parameter arguments, choose names that match
-// the fragment initialization parameters, e.g. ARG_ITEM_NUMBER
-private const val ARG_PARAM1 = "param1"
-private const val ARG_PARAM2 = "param2"
+class FollowingFragment(val username: String) : Fragment() {
+    private lateinit var root: View
+    private lateinit var rvFollowing: RecyclerView
+    private var listFollowing = ArrayList<FollowResponseItem>()
 
-/**
- * A simple [Fragment] subclass.
- * Use the [FollowingFragment.newInstance] factory method to
- * create an instance of this fragment.
- */
-class FollowingFragment : Fragment() {
-    // TODO: Rename and change types of parameters
-    private var param1: String? = null
-    private var param2: String? = null
+    override fun onActivityCreated(savedInstanceState: Bundle?) {
+        super.onActivityCreated(savedInstanceState)
+        showRecyclerList()
+    }
 
-    override fun onCreate(savedInstanceState: Bundle?) {
-        super.onCreate(savedInstanceState)
-        arguments?.let {
-            param1 = it.getString(ARG_PARAM1)
-            param2 = it.getString(ARG_PARAM2)
-        }
+    private fun showRecyclerList() {
+        rvFollowing.layoutManager = LinearLayoutManager(activity)
+        val listFollowingAdapter = FollowAdapter(listFollowing)
+        rvFollowing.adapter = listFollowingAdapter
     }
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View? {
-        // Inflate the layout for this fragment
-        return inflater.inflate(R.layout.fragment_following, container, false)
+        root = inflater.inflate(R.layout.fragment_following, container, false)
+        rvFollowing = root.findViewById(R.id.rv_following)
+
+        getFollowing(username)
+
+        return root
+    }
+
+    private fun getFollowing(username: String) {
+        showLoading(true)
+
+        val client = FollowApiConfig.getFollowApiService().getFollowing(username)
+        client.enqueue(object : Callback<List<FollowResponseItem>> {
+            override fun onResponse(
+                call: Call<List<FollowResponseItem>>,
+                response: Response<List<FollowResponseItem>>
+            ) {
+                showLoading(false)
+                if (response.isSuccessful) {
+                    val responseBody = response.body()
+                    if (responseBody != null) {
+                        listFollowing.addAll(responseBody)
+                        Log.d("Jumlah: ", listFollowing.size.toString())
+                    } else {
+                        Log.d("Jumlah: ", "null")
+                    }
+                } else {
+                    Log.e(TAG, "onFailure: ${response.message()}")
+                }
+            }
+
+            override fun onFailure(call: Call<List<FollowResponseItem>>, t: Throwable) {
+                showLoading(false)
+                Log.e(TAG, "onFailure: ${t.message}")
+            }
+        })
+    }
+
+    private fun showLoading(isLoading: Boolean) {
+        val pgBar: ProgressBar = root.findViewById(R.id.progressBar4)
+
+        if (isLoading) {
+            pgBar.visibility = View.VISIBLE
+        } else {
+            pgBar.visibility = View.GONE
+        }
     }
 
     companion object {
-        /**
-         * Use this factory method to create a new instance of
-         * this fragment using the provided parameters.
-         *
-         * @param param1 Parameter 1.
-         * @param param2 Parameter 2.
-         * @return A new instance of fragment FollowingFragment.
-         */
-        // TODO: Rename and change types and number of parameters
-        @JvmStatic
-        fun newInstance(param1: String, param2: String) =
-            FollowingFragment().apply {
-                arguments = Bundle().apply {
-                    putString(ARG_PARAM1, param1)
-                    putString(ARG_PARAM2, param2)
-                }
-            }
+        private const val TAG = "UserDetailActivity"
     }
 }

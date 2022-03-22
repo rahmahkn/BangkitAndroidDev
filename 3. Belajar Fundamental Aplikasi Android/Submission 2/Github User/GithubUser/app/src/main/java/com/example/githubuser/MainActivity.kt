@@ -17,7 +17,6 @@ import androidx.recyclerview.widget.RecyclerView
 import com.example.githubuser.databinding.ActivityMainBinding
 import com.example.githubuser.network.SearchItem
 import com.example.githubuser.network.SearchResponse
-import com.example.githubuser.network.User
 import com.example.githubuser.network.search.SearchApiConfig
 import com.example.githubuser.ui.detail.UserDetailActivity
 import com.example.githubuser.ui.search.SearchAdapter
@@ -58,7 +57,6 @@ class MainActivity : AppCompatActivity() {
         searchView.queryHint = "Search User"
         searchView.setOnQueryTextListener(object : SearchView.OnQueryTextListener {
             override fun onQueryTextSubmit(query: String): Boolean {
-                Toast.makeText(this@MainActivity, "Cari " + query, Toast.LENGTH_SHORT).show()
                 showSearchResults(query)
                 searchView.clearFocus()
                 return true
@@ -99,10 +97,15 @@ class MainActivity : AppCompatActivity() {
                         val listUserAdapter = SearchAdapter(responseBody.items)
                         rvUsers.adapter = listUserAdapter
 
-                        listUserAdapter.setOnItemClickCallback(object: SearchAdapter.OnItemClickCallback {
+                        listUserAdapter.setOnItemClickCallback(object :
+                            SearchAdapter.OnItemClickCallback {
                             override fun onItemClicked(data: SearchItem) {
-                                val moveDataWithIntent = Intent(this@MainActivity, UserDetailActivity::class.java)
-                                moveDataWithIntent.putExtra(UserDetailActivity.EXTRA_USER, data.login)
+                                val moveDataWithIntent =
+                                    Intent(this@MainActivity, UserDetailActivity::class.java)
+                                moveDataWithIntent.putExtra(
+                                    UserDetailActivity.EXTRA_USER,
+                                    data.login
+                                )
                                 startActivity(moveDataWithIntent)
                             }
                         })
@@ -125,9 +128,5 @@ class MainActivity : AppCompatActivity() {
         } else {
             binding.progressBar.visibility = View.GONE
         }
-    }
-
-    private fun showSelectedUser(user: User) {
-        Toast.makeText(this, "You clicked " + user.username, Toast.LENGTH_SHORT).show()
     }
 }

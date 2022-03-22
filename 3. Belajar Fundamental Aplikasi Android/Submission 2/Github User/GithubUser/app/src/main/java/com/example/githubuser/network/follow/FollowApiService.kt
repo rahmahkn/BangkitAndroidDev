@@ -1,6 +1,5 @@
 package com.example.githubuser.network.follow
 
-import com.example.githubuser.network.FollowResponse
 import com.example.githubuser.network.FollowResponseItem
 import retrofit2.Call
 import retrofit2.http.GET

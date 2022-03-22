@@ -1,6 +1,5 @@
 package com.example.githubuser.ui.detail
 
-import android.content.Intent
 import android.os.Bundle
 import android.util.Log
 import android.view.View
@@ -9,17 +8,11 @@ import android.widget.ProgressBar
 import android.widget.TextView
 import androidx.annotation.StringRes
 import androidx.appcompat.app.AppCompatActivity
-import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.viewpager2.widget.ViewPager2
 import com.bumptech.glide.Glide
 import com.example.githubuser.R
-import com.example.githubuser.network.FollowResponse
-import com.example.githubuser.network.FollowResponseItem
 import com.example.githubuser.network.detail.UserApiConfig
 import com.example.githubuser.network.detail.UserResponse
-import com.example.githubuser.network.follow.FollowApiConfig
-import com.example.githubuser.network.search.SearchApiConfig
-import com.example.githubuser.ui.search.SearchAdapter
 import com.google.android.material.tabs.TabLayout
 import com.google.android.material.tabs.TabLayoutMediator
 import retrofit2.Call
@@ -27,15 +20,13 @@ import retrofit2.Callback
 import retrofit2.Response
 
 class UserDetailActivity : AppCompatActivity() {
-    private var listFollowers = ArrayList<FollowResponseItem>()
-
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_user_detail)
 
         getUserData()
 
-        val sectionsPagerAdapter = DetailAdapter(this, EXTRA_USER)
+        val sectionsPagerAdapter = DetailAdapter(this, intent.getStringExtra(EXTRA_USER)!!)
         val viewPager: ViewPager2 = findViewById(R.id.view_pager)
         viewPager.adapter = sectionsPagerAdapter
         val tabs: TabLayout = findViewById(R.id.tabs)
@@ -47,6 +38,7 @@ class UserDetailActivity : AppCompatActivity() {
 
     private fun getUserData() {
         val username = intent.getStringExtra(EXTRA_USER)
+
         // Getting view in detail user page
         val tvAvatar: ImageView = findViewById(R.id.tv_detail_avatar)
         val tvUsername: TextView = findViewById(R.id.tv_detail_username)
@@ -80,7 +72,8 @@ class UserDetailActivity : AppCompatActivity() {
                         tvFollRepo.text =
                             user!!.followers?.let {
                                 StringBuilder(it).append(" followers | ").append(user!!.following)
-                                    .append(" following | ").append(user!!.publicRepos).append(" repository")
+                                    .append(" following | ").append(user!!.publicRepos)
+                                    .append(" repository")
                             }
                     }
                 } else {
@@ -107,7 +100,7 @@ class UserDetailActivity : AppCompatActivity() {
 
     companion object {
         private const val TAG = "UserDetailActivity"
-        const val EXTRA_USER = "sidiqpermana"
+        const val EXTRA_USER = ""
 
         @StringRes
         private val TAB_TITLES = intArrayOf(

@@ -1,13 +1,12 @@
 package com.example.githubuser.ui.detail
 
-import android.content.Intent
 import android.os.Bundle
 import android.util.Log
-import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.ProgressBar
+import androidx.fragment.app.Fragment
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.example.githubuser.R
@@ -17,7 +16,7 @@ import retrofit2.Call
 import retrofit2.Callback
 import retrofit2.Response
 
-class FollowersFragment() : Fragment() {
+class FollowersFragment(val username: String) : Fragment() {
     private lateinit var root: View
     private lateinit var rvFollowers: RecyclerView
     private var listFollowers = ArrayList<FollowResponseItem>()
@@ -41,10 +40,7 @@ class FollowersFragment() : Fragment() {
         root = inflater.inflate(R.layout.fragment_followers, container, false)
         rvFollowers = root.findViewById(R.id.rv_followers)
 
-        getFollowers("sidiqpermana")
-
-//        val bundle = arguments
-//        bundle!!.getParcelableArrayList<FollowResponseItem>("listFollowers")?.let { listFollowers.addAll(it) }
+        getFollowers(username)
 
         return root
     }
@@ -91,7 +87,6 @@ class FollowersFragment() : Fragment() {
     }
 
     companion object {
-        fun newInstance() = FollowersFragment()
         private const val TAG = "UserDetailActivity"
     }
 }

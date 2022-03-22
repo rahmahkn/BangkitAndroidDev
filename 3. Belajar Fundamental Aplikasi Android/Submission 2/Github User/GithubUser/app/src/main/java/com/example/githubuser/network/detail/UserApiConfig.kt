@@ -1,7 +1,6 @@
 package com.example.githubuser.network.detail
 
 import com.example.githubuser.BuildConfig
-import com.example.githubuser.network.search.SearchApiService
 import okhttp3.OkHttpClient
 import okhttp3.logging.HttpLoggingInterceptor
 import retrofit2.Retrofit
