@@ -58,7 +58,6 @@ class FollowersFragment(val username: String) : Fragment() {
                 if (response.isSuccessful) {
                     val responseBody = response.body()
                     if (responseBody != null) {
-//                        val listUsers = responseBody
                         listFollowers.addAll(responseBody)
                         Log.d("Jumlah: ", listFollowers.size.toString())
                     } else {

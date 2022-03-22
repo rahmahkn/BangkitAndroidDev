@@ -20,18 +20,25 @@ import retrofit2.Callback
 import retrofit2.Response
 
 class UserDetailActivity : AppCompatActivity() {
+    private var numFollowers = "Followers"
+    private var numFollowing = "Following"
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_user_detail)
 
         getUserData()
 
+        val TAB_TITLES = arrayOf(
+            numFollowers, numFollowing
+        )
+
         val sectionsPagerAdapter = DetailAdapter(this, intent.getStringExtra(EXTRA_USER)!!)
         val viewPager: ViewPager2 = findViewById(R.id.view_pager)
         viewPager.adapter = sectionsPagerAdapter
         val tabs: TabLayout = findViewById(R.id.tabs)
         TabLayoutMediator(tabs, viewPager) { tab, position ->
-            tab.text = resources.getString(TAB_TITLES[position])
+            tab.text = TAB_TITLES[position]
         }.attach()
         supportActionBar?.elevation = 0f
     }
@@ -44,8 +51,6 @@ class UserDetailActivity : AppCompatActivity() {
         val tvUsername: TextView = findViewById(R.id.tv_detail_username)
         val tvName: TextView = findViewById(R.id.tv_detail_name)
         val tvLocation: TextView = findViewById(R.id.tv_detail_location)
-        val tvCompany: TextView = findViewById(R.id.tv_detail_company)
-        val tvFollRepo: TextView = findViewById(R.id.tv_detail_foll_repo)
 
         showLoading(true)
         val client = UserApiConfig.getUserApiService().getUser(username!!)
@@ -59,7 +64,6 @@ class UserDetailActivity : AppCompatActivity() {
                     val responseBody = response.body()
                     if (responseBody != null) {
                         val user = responseBody
-                        Log.d("Nama: ", user!!.name!!)
 
                         // Change the view attribute user data from main activity
                         Glide.with(this@UserDetailActivity)
@@ -67,14 +71,14 @@ class UserDetailActivity : AppCompatActivity() {
                             .into(tvAvatar)
                         tvUsername.text = user!!.login
                         tvName.text = username
-                        tvLocation.text = StringBuilder("Location: ").append(user!!.location)
-                        tvCompany.text = StringBuilder("Company: ").append(user!!.company)
-                        tvFollRepo.text =
+                        tvLocation.text =
                             user!!.followers?.let {
-                                StringBuilder(it).append(" followers | ").append(user!!.following)
-                                    .append(" following | ").append(user!!.publicRepos)
-                                    .append(" repository")
+                                StringBuilder(it).append(user!!.company)
+                                    .append(" • ").append(user!!.location)
                             }
+
+                        numFollowers = "Followers (" + user!!.followers!!.toString() + ")"
+                        numFollowing = "Following (" + user!!.following!!.toString() + ")"
                     }
                 } else {
                     Log.e(TAG, "onFailure: ${response.message()}")
@@ -101,11 +105,5 @@ class UserDetailActivity : AppCompatActivity() {
     companion object {
         private const val TAG = "UserDetailActivity"
         const val EXTRA_USER = ""
-
-        @StringRes
-        private val TAB_TITLES = intArrayOf(
-            R.string.tab_text_1,
-            R.string.tab_text_2
-        )
     }
 }
