@@ -7,20 +7,18 @@ import android.view.View
 import android.widget.ImageView
 import android.widget.ProgressBar
 import android.widget.TextView
+import androidx.annotation.StringRes
 import androidx.appcompat.app.AppCompatActivity
 import androidx.recyclerview.widget.LinearLayoutManager
+import androidx.viewpager2.widget.ViewPager2
 import com.bumptech.glide.Glide
-import com.example.githubuser.MainActivity
 import com.example.githubuser.R
-import com.example.githubuser.databinding.ActivityMainBinding
-import com.example.githubuser.databinding.ActivityUserDetailBinding
-import com.example.githubuser.network.SearchItem
-import com.example.githubuser.network.SearchResponse
-import com.example.githubuser.network.User
 import com.example.githubuser.network.detail.UserApiConfig
 import com.example.githubuser.network.detail.UserResponse
 import com.example.githubuser.network.search.SearchApiConfig
 import com.example.githubuser.ui.search.SearchAdapter
+import com.google.android.material.tabs.TabLayout
+import com.google.android.material.tabs.TabLayoutMediator
 import retrofit2.Call
 import retrofit2.Callback
 import retrofit2.Response
@@ -31,6 +29,15 @@ class UserDetailActivity : AppCompatActivity() {
         setContentView(R.layout.activity_user_detail)
 
         getUserData()
+
+        val sectionsPagerAdapter = DetailAdapter(this)
+        val viewPager: ViewPager2 = findViewById(R.id.view_pager)
+        viewPager.adapter = sectionsPagerAdapter
+        val tabs: TabLayout = findViewById(R.id.tabs)
+        TabLayoutMediator(tabs, viewPager) { tab, position ->
+            tab.text = resources.getString(TAB_TITLES[position])
+        }.attach()
+        supportActionBar?.elevation = 0f
     }
 
     private fun getUserData() {
@@ -96,5 +103,11 @@ class UserDetailActivity : AppCompatActivity() {
     companion object {
         private const val TAG = "UserDetailActivity"
         const val EXTRA_USER = "sidiqpermana"
+
+        @StringRes
+        private val TAB_TITLES = intArrayOf(
+            R.string.tab_text_1,
+            R.string.tab_text_2
+        )
     }
 }

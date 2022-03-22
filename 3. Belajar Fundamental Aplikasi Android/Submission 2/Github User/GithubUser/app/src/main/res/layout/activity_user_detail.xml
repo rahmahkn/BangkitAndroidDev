@@ -3,6 +3,7 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
     android:padding="50dp"
     tools:context=".ui.detail.UserDetailActivity">
 
@@ -68,11 +69,29 @@
         android:textSize="12sp"
         tools:text="PT Google" />
 
+    <com.google.android.material.tabs.TabLayout
+        android:id="@+id/tabs"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_below="@+id/tv_detail_location"
+        android:layout_marginTop="33dp"
+        android:background="?attr/colorPrimary"
+        app:tabTextColor="@android:color/white" />
+
+    <androidx.viewpager2.widget.ViewPager2
+        android:id="@+id/view_pager"
+        android:layout_width="361dp"
+        android:layout_height="205dp"
+        android:layout_below="@+id/tv_detail_company"
+        android:layout_marginTop="60dp" />
+
     <ProgressBar
         android:id="@+id/progressBar2"
         style="?android:attr/progressBarStyle"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:visibility="gone"
+        android:layout_alignParentStart="true"
+        android:layout_alignParentEnd="true"
         tools:visibility="visible" />
 </RelativeLayout>
