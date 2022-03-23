@@ -10,10 +10,10 @@
         android:id="@+id/tv_detail_avatar"
         android:layout_width="150dp"
         android:layout_height="150dp"
-        android:contentDescription="Profile Picture"
         android:layout_alignParentStart="true"
         android:layout_alignParentEnd="true"
         android:background="@color/grey_500"
+        android:contentDescription="@string/profile_picture"
         android:paddingTop="15dp"
         tools:src="@tools:sample/avatars" />
 
@@ -21,44 +21,44 @@
         android:id="@+id/tv_detail_name"
         style="@style/TextFont"
         android:layout_below="@+id/tv_detail_avatar"
+        android:background="@color/grey_500"
         android:paddingTop="10dp"
         android:selectAllOnFocus="false"
         android:textAlignment="center"
+        android:textColor="@color/white"
         android:textSize="20sp"
         android:textStyle="bold"
-        android:background="@color/grey_500"
-        android:textColor="@color/white"
         tools:text="name" />
 
     <TextView
         android:id="@+id/tv_detail_username"
         style="@style/TextFont"
         android:layout_below="@+id/tv_detail_name"
+        android:background="@color/grey_500"
         android:paddingTop="5dp"
         android:textAlignment="center"
-        android:textSize="14sp"
-        android:background="@color/grey_500"
         android:textColor="@color/white"
+        android:textSize="14sp"
         tools:text="username" />
 
     <TextView
         android:id="@+id/tv_detail_location"
         style="@style/TextFont"
         android:layout_below="@+id/tv_detail_username"
+        android:background="@color/grey_500"
         android:paddingTop="5dp"
         android:textAlignment="center"
-        android:textSize="12sp"
-        android:background="@color/grey_500"
         android:textColor="@color/white"
-        tools:text="11 followers | 10 following | 5 repositories" />
+        android:textSize="12sp"
+        tools:text="PT Google" />
 
     <com.google.android.material.tabs.TabLayout
         android:id="@+id/tabs"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_below="@+id/tv_detail_location"
-        android:paddingTop="15dp"
         android:background="?attr/colorPrimary"
+        android:paddingTop="15dp"
         app:tabTextColor="@android:color/white" />
 
     <androidx.viewpager2.widget.ViewPager2

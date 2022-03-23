@@ -6,10 +6,8 @@ import android.content.Intent
 import android.os.Bundle
 import android.util.Log
 import android.view.Menu
-import android.view.MenuItem
 import android.view.View
 import android.widget.SearchView
-import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
 import androidx.recyclerview.widget.DividerItemDecoration
 import androidx.recyclerview.widget.LinearLayoutManager
@@ -30,7 +28,6 @@ class MainActivity : AppCompatActivity() {
 
     companion object {
         private const val TAG = "MainActivity"
-        private const val USERNAME = "sidiqpermana"
     }
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -70,15 +67,6 @@ class MainActivity : AppCompatActivity() {
         return true
     }
 
-    override fun onOptionsItemSelected(item: MenuItem): Boolean {
-        when (item.itemId) {
-            R.id.menu_search -> {
-                Toast.makeText(this, "Klik search bar", Toast.LENGTH_SHORT).show()
-            }
-        }
-        return super.onOptionsItemSelected(item)
-    }
-
     private fun showSearchResults(query: String) {
         showLoading(true)
         val client = SearchApiConfig.getSearchApiService().getSearch(query)
@@ -93,22 +81,27 @@ class MainActivity : AppCompatActivity() {
                     if (responseBody != null) {
                         Log.d("Jumlah response: ", responseBody.items.size.toString())
 
-                        rvUsers.layoutManager = LinearLayoutManager(this@MainActivity)
-                        val listUserAdapter = SearchAdapter(responseBody.items)
-                        rvUsers.adapter = listUserAdapter
+                        if (responseBody.items.isEmpty()) {
+                            binding.mainError.visibility = View.VISIBLE
+                        } else {
+                            binding.mainError.visibility = View.GONE
+                            rvUsers.layoutManager = LinearLayoutManager(this@MainActivity)
+                            val listUserAdapter = SearchAdapter(responseBody.items)
+                            rvUsers.adapter = listUserAdapter
 
-                        listUserAdapter.setOnItemClickCallback(object :
-                            SearchAdapter.OnItemClickCallback {
-                            override fun onItemClicked(data: SearchItem) {
-                                val moveDataWithIntent =
-                                    Intent(this@MainActivity, UserDetailActivity::class.java)
-                                moveDataWithIntent.putExtra(
-                                    UserDetailActivity.EXTRA_USER,
-                                    data.login
-                                )
-                                startActivity(moveDataWithIntent)
-                            }
-                        })
+                            listUserAdapter.setOnItemClickCallback(object :
+                                SearchAdapter.OnItemClickCallback {
+                                override fun onItemClicked(data: SearchItem) {
+                                    val moveDataWithIntent =
+                                        Intent(this@MainActivity, UserDetailActivity::class.java)
+                                    moveDataWithIntent.putExtra(
+                                        UserDetailActivity.EXTRA_USER,
+                                        data.login
+                                    )
+                                    startActivity(moveDataWithIntent)
+                                }
+                            })
+                        }
                     }
                 } else {
                     Log.e(TAG, "onFailure: ${response.message()}")
@@ -125,6 +118,7 @@ class MainActivity : AppCompatActivity() {
     private fun showLoading(isLoading: Boolean) {
         if (isLoading) {
             binding.progressBar.visibility = View.VISIBLE
+            binding.progressBar.visibility = View.GONE
         } else {
             binding.progressBar.visibility = View.GONE
         }

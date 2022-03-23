@@ -6,4 +6,7 @@
 
     <string name="tab_text_1">Followers</string>
     <string name="tab_text_2">Following</string>
+    <string name="profile_picture">Profile Picture</string>
+    <string name="search">Search</string>
+    <string name="no_users_found">No users found</string>
 </resources>

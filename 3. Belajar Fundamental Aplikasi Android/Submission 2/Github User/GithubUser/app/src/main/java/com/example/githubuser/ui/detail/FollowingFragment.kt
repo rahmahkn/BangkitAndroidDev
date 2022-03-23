@@ -6,6 +6,7 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.ProgressBar
+import android.widget.TextView
 import androidx.fragment.app.Fragment
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
@@ -45,6 +46,7 @@ class FollowingFragment(val username: String) : Fragment() {
     }
 
     private fun getFollowing(username: String) {
+        val tvError = root.findViewById<TextView>(R.id.following_error)
         showLoading(true)
 
         val client = FollowApiConfig.getFollowApiService().getFollowing(username)
@@ -57,10 +59,13 @@ class FollowingFragment(val username: String) : Fragment() {
                 if (response.isSuccessful) {
                     val responseBody = response.body()
                     if (responseBody != null) {
-                        listFollowing.addAll(responseBody)
-                        Log.d("Jumlah: ", listFollowing.size.toString())
-                    } else {
-                        Log.d("Jumlah: ", "null")
+                        if (responseBody.isEmpty()) {
+                            tvError.visibility = View.VISIBLE
+                        } else {
+                            tvError.visibility = View.GONE
+                            listFollowing.addAll(responseBody)
+                            Log.d("Jumlah: ", listFollowing.size.toString())
+                        }
                     }
                 } else {
                     Log.e(TAG, "onFailure: ${response.message()}")
@@ -76,9 +81,11 @@ class FollowingFragment(val username: String) : Fragment() {
 
     private fun showLoading(isLoading: Boolean) {
         val pgBar: ProgressBar = root.findViewById(R.id.progressBar4)
+        val tvError = root.findViewById<TextView>(R.id.following_error)
 
         if (isLoading) {
             pgBar.visibility = View.VISIBLE
+            tvError.visibility = View.GONE
         } else {
             pgBar.visibility = View.GONE
         }

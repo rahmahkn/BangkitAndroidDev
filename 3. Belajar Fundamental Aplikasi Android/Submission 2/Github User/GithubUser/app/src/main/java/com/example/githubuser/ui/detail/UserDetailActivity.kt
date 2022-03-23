@@ -6,7 +6,6 @@ import android.view.View
 import android.widget.ImageView
 import android.widget.ProgressBar
 import android.widget.TextView
-import androidx.annotation.StringRes
 import androidx.appcompat.app.AppCompatActivity
 import androidx.viewpager2.widget.ViewPager2
 import com.bumptech.glide.Glide
@@ -69,16 +68,16 @@ class UserDetailActivity : AppCompatActivity() {
                         Glide.with(this@UserDetailActivity)
                             .load(user.avatarUrl)
                             .into(tvAvatar)
-                        tvUsername.text = user!!.login
+                        tvUsername.text = user.login
                         tvName.text = username
                         tvLocation.text =
-                            user!!.followers?.let {
-                                StringBuilder(it).append(user!!.company)
-                                    .append(" • ").append(user!!.location)
+                            user.followers?.let {
+                                StringBuilder(it).append(user.company)
+                                    .append(" • ").append(user.location)
                             }
 
-                        numFollowers = "Followers (" + user!!.followers!!.toString() + ")"
-                        numFollowing = "Following (" + user!!.following!!.toString() + ")"
+                        numFollowers = "Followers (" + user.followers.toString() + ")"
+                        numFollowing = "Following (" + user.following.toString() + ")"
                     }
                 } else {
                     Log.e(TAG, "onFailure: ${response.message()}")

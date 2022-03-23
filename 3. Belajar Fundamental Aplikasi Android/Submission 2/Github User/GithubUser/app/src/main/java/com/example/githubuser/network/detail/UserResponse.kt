@@ -3,39 +3,24 @@ package com.example.githubuser.network.detail
 import com.google.gson.annotations.SerializedName
 
 data class UserResponse(
-    @field:SerializedName("twitter_username")
-    val twitterUsername: Any? = null,
-
     @field:SerializedName("login")
-    val login: String? = null,
-
-    @field:SerializedName("blog")
-    val blog: String? = null,
+    val login: String,
 
     @field:SerializedName("company")
-    val company: String? = null,
-
-    @field:SerializedName("public_repos")
-    val publicRepos: Int? = null,
-
-    @field:SerializedName("email")
-    val email: Any? = null,
-
-    @field:SerializedName("public_gists")
-    val publicGists: Int? = null,
+    val company: String,
 
     @field:SerializedName("followers")
-    val followers: Int? = null,
+    val followers: Int,
 
     @field:SerializedName("avatar_url")
-    val avatarUrl: String? = null,
+    val avatarUrl: String,
 
     @field:SerializedName("following")
-    val following: Int? = null,
+    val following: Int,
 
     @field:SerializedName("name")
-    val name: String? = null,
+    val name: String,
 
     @field:SerializedName("location")
-    val location: String? = null,
+    val location: String,
 )
