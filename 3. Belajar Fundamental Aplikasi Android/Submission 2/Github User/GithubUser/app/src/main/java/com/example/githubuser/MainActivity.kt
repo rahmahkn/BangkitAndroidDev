@@ -54,12 +54,14 @@ class MainActivity : AppCompatActivity() {
         searchView.queryHint = "Search User"
         searchView.setOnQueryTextListener(object : SearchView.OnQueryTextListener {
             override fun onQueryTextSubmit(query: String): Boolean {
+                showLoading(true)
                 showSearchResults(query)
                 searchView.clearFocus()
                 return true
             }
 
-            override fun onQueryTextChange(p0: String?): Boolean {
+            override fun onQueryTextChange(query: String?): Boolean {
+                showLoading(true)
                 return false
             }
         })
@@ -118,7 +120,6 @@ class MainActivity : AppCompatActivity() {
     private fun showLoading(isLoading: Boolean) {
         if (isLoading) {
             binding.progressBar.visibility = View.VISIBLE
-            binding.progressBar.visibility = View.GONE
         } else {
             binding.progressBar.visibility = View.GONE
         }

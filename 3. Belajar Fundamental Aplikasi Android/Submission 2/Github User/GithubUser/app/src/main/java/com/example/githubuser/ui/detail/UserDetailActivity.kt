@@ -69,7 +69,7 @@ class UserDetailActivity : AppCompatActivity() {
                             .load(user.avatarUrl)
                             .into(tvAvatar)
                         tvUsername.text = user.login
-                        tvName.text = username
+                        tvName.text = user.name
                         tvLocation.text =
                             user.followers?.let {
                                 StringBuilder(it).append(user.company)
