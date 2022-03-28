@@ -26,10 +26,6 @@ class MainActivity : AppCompatActivity() {
     private lateinit var binding: ActivityMainBinding
     private lateinit var rvUsers: RecyclerView
 
-    companion object {
-        private const val TAG = "MainActivity"
-    }
-
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         binding = ActivityMainBinding.inflate(layoutInflater)
@@ -55,8 +51,10 @@ class MainActivity : AppCompatActivity() {
         searchView.setOnQueryTextListener(object : SearchView.OnQueryTextListener {
             override fun onQueryTextSubmit(query: String): Boolean {
                 showLoading(true)
+
                 showSearchResults(query)
                 searchView.clearFocus()
+
                 return true
             }
 
@@ -96,10 +94,10 @@ class MainActivity : AppCompatActivity() {
                                 override fun onItemClicked(data: SearchItem) {
                                     val moveDataWithIntent =
                                         Intent(this@MainActivity, UserDetailActivity::class.java)
-                                    moveDataWithIntent.putExtra(
-                                        UserDetailActivity.EXTRA_USER,
-                                        data.login
-                                    )
+
+                                    moveDataWithIntent.putExtra(UserDetailActivity.EXTRA_USER, data.login)
+                                    moveDataWithIntent.putExtra(UserDetailActivity.EXTRA_AVATAR, data.avatar_url)
+
                                     startActivity(moveDataWithIntent)
                                 }
                             })
@@ -123,5 +121,10 @@ class MainActivity : AppCompatActivity() {
         } else {
             binding.progressBar.visibility = View.GONE
         }
+    }
+
+    companion object {
+        private const val TAG = "MainActivity"
+        private var EXTRA_USERNAME = "extra_username"
     }
 }

@@ -17,7 +17,7 @@ import retrofit2.Call
 import retrofit2.Callback
 import retrofit2.Response
 
-class FollowersFragment(val username: String) : Fragment() {
+class FollowersFragment : Fragment() {
     private lateinit var root: View
     private lateinit var rvFollowers: RecyclerView
     private var listFollowers = ArrayList<FollowResponseItem>()
@@ -37,11 +37,14 @@ class FollowersFragment(val username: String) : Fragment() {
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
-    ): View? {
+    ): View {
         root = inflater.inflate(R.layout.fragment_followers, container, false)
         rvFollowers = root.findViewById(R.id.rv_followers)
 
-        getFollowers(username)
+        if (arguments != null) {
+            val username = arguments?.getString(EXTRA_FOLLOWERS)
+            getFollowers(username!!)
+        }
 
         return root
     }
@@ -96,6 +99,7 @@ class FollowersFragment(val username: String) : Fragment() {
     }
 
     companion object {
-        private const val TAG = "UserDetailActivity"
+        const val EXTRA_FOLLOWERS = "extra_followers"
+        private const val TAG = "FollowersFragment"
     }
 }

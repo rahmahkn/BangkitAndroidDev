@@ -9,4 +9,5 @@
     <string name="profile_picture">Profile Picture</string>
     <string name="search">Search</string>
     <string name="no_users_found">No users found</string>
+    <string name="favorite">Favorite</string>
 </resources>

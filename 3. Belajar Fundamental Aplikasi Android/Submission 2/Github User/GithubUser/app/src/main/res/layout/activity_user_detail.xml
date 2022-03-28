@@ -59,6 +59,7 @@
         android:layout_below="@+id/tv_detail_location"
         android:background="?attr/colorPrimary"
         android:paddingTop="15dp"
+        app:tabIndicatorColor="@android:color/white"
         app:tabTextColor="@android:color/white" />
 
     <androidx.viewpager2.widget.ViewPager2
@@ -66,6 +67,20 @@
         android:layout_width="match_parent"
         android:layout_height="350dp"
         android:layout_below="@+id/tabs" />
+
+    <com.google.android.material.floatingactionbutton.FloatingActionButton
+        android:id="@+id/fab_favorite"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignParentEnd="true"
+        android:layout_alignParentBottom="true"
+        android:layout_gravity="bottom"
+        android:layout_marginStart="16dp"
+        android:layout_marginTop="16dp"
+        android:layout_marginEnd="16dp"
+        android:layout_marginBottom="16dp"
+        android:src="@drawable/ic_baseline_favorite_border_24"
+        android:contentDescription="@string/favorite" />
 
     <ProgressBar
         android:id="@+id/progressBar2"

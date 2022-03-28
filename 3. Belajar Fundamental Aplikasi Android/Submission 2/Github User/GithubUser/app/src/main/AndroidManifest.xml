@@ -17,17 +17,22 @@
         android:theme="@style/Theme.GithubUser"
         tools:targetApi="31">
         <activity
-            android:name=".ui.detail.UserDetailActivity"
+            android:name=".FavoriteActivity"
             android:exported="false"
-            android:label="@string/detail_page" />
+            android:label="Favorite Users"/>
         <activity
-            android:name=".MainActivity"
-            android:exported="true">
+            android:name=".ui.detail.UserDetailActivity"
+            android:exported="true"
+            android:label="@string/detail_page">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
-
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
+        </activity>
+
+        <activity
+            android:name=".MainActivity"
+            android:exported="false">
         </activity>
     </application>
 
