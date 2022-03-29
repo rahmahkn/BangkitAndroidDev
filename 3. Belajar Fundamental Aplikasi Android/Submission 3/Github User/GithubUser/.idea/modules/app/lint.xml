@@ -1,0 +1,6 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<lint>
+    <issue id="IconLocation">
+        <ignore path="D:/2. Online Course/Bangkit/BangkitAndroidDev/3. Belajar Fundamental Aplikasi Android/Submission 2/Github User/GithubUser/app/src/main/res/drawable/github.png" />
+    </issue>
+</lint>
