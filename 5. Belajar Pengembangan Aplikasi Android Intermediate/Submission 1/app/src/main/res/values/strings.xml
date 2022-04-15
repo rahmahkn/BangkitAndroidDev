@@ -5,4 +5,6 @@
     <string name="login">Login</string>
     <string name="name">Name</string>
     <string name="register">Register</string>
+    <string name="belum_punya_akun">Belum punya akun?</string>
+    <string name="sudah_punya_akun">Sudah punya akun?</string>
 </resources>

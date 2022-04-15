@@ -1,6 +1,7 @@
 package com.example.storyapp
 
 import android.content.Context
+import android.content.Intent
 import android.graphics.Canvas
 import android.graphics.drawable.Drawable
 import androidx.appcompat.app.AppCompatActivity
@@ -22,6 +23,7 @@ class LoginActivity : AppCompatActivity() {
     private lateinit var myButton: LogButton
     private lateinit var emailEditText: EmailEditText
     private lateinit var passwordEditText: PasswordEditText
+    private lateinit var linkRegisterText: TextView
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -30,13 +32,14 @@ class LoginActivity : AppCompatActivity() {
         myButton = findViewById(R.id.login_button)
         emailEditText = findViewById(R.id.email_edit_text)
         passwordEditText = findViewById(R.id.password_edit_text)
+        linkRegisterText = findViewById(R.id.link_register)
+
         setMyButtonEnable()
 
         emailEditText.addTextChangedListener(object : TextWatcher {
             override fun beforeTextChanged(s: CharSequence, start: Int, count: Int, after: Int) {
             }
             override fun onTextChanged(s: CharSequence, start: Int, before: Int, count: Int) {
-//                setMyButtonEnable()
                 if (passwordEditText.text!!.isNotEmpty()) {
                     setMyButtonEnable()
                 }
@@ -60,6 +63,11 @@ class LoginActivity : AppCompatActivity() {
         myButton.setOnClickListener {
             Toast.makeText(this@LoginActivity, emailEditText.text, Toast.LENGTH_SHORT).show()
             emailEditText.text?.clear()
+        }
+
+        linkRegisterText.setOnClickListener {
+            val loginIntent = Intent(this@LoginActivity, RegisterActivity::class.java)
+            startActivity(loginIntent)
         }
     }
 

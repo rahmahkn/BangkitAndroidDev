@@ -1,4 +1,7 @@
+package com.example.storyapp
+
 import android.content.Context
+import android.content.Intent
 import android.graphics.Canvas
 import android.graphics.drawable.Drawable
 import androidx.appcompat.app.AppCompatActivity
@@ -26,15 +29,18 @@ class RegisterActivity : AppCompatActivity() {
     private lateinit var nameEditText: EditText
     private lateinit var emailEditText: EmailEditText
     private lateinit var passwordEditText: PasswordEditText
+    private lateinit var linkLoginText: TextView
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_register)
 
-        myButton = findViewById(R.id.login_button)
+        myButton = findViewById(R.id.register_button)
         nameEditText = findViewById(R.id.name_edit_text)
         emailEditText = findViewById(R.id.email_edit_text)
         passwordEditText = findViewById(R.id.password_edit_text)
+        linkLoginText = findViewById(R.id.link_login)
+
         setMyButtonEnable()
 
         emailEditText.addTextChangedListener(object : TextWatcher {
@@ -77,42 +83,14 @@ class RegisterActivity : AppCompatActivity() {
             Toast.makeText(this@RegisterActivity, emailEditText.text, Toast.LENGTH_SHORT).show()
             emailEditText.text?.clear()
         }
-    }
 
+        linkLoginText.setOnClickListener {
+            val loginIntent = Intent(this@RegisterActivity, LoginActivity::class.java)
+            startActivity(loginIntent)
+        }
+    }
     private fun setMyButtonEnable() {
         val result = emailEditText.text
         myButton.isEnabled = result != null && result.toString().isNotEmpty()
-    }
-}
-
-class LoginButton : AppCompatButton {
-
-    private lateinit var enabledBackground: Drawable
-    private lateinit var disabledBackground: Drawable
-    private var txtColor: Int = 0
-
-    constructor(context: Context) : super(context) {
-        init()
-    }
-    constructor(context: Context, attrs: AttributeSet) : super(context, attrs) {
-        init()
-    }
-    constructor(context: Context, attrs: AttributeSet, defStyleAttr: Int) : super(context, attrs, defStyleAttr) {
-        init()
-    }
-
-    override fun onDraw(canvas: Canvas) {
-        super.onDraw(canvas)
-        background = if(isEnabled) enabledBackground else disabledBackground
-        setTextColor(txtColor)
-        textSize = 12f
-        gravity = Gravity.CENTER
-        text = context.getString(R.string.register)
-    }
-
-    private fun init() {
-        txtColor = ContextCompat.getColor(context, android.R.color.background_light)
-        enabledBackground = ContextCompat.getDrawable(context, R.drawable.bg_button) as Drawable
-        disabledBackground = ContextCompat.getDrawable(context, R.drawable.bg_button_disable) as Drawable
     }
 }
