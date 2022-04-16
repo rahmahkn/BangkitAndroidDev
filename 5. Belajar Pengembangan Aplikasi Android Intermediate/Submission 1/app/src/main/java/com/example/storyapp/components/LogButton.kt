@@ -1,4 +1,4 @@
-package com.example.storyapp
+package com.example.storyapp.components
 
 import android.content.Context
 import android.graphics.Canvas
@@ -7,6 +7,7 @@ import android.util.AttributeSet
 import android.view.Gravity
 import androidx.appcompat.widget.AppCompatButton
 import androidx.core.content.ContextCompat
+import com.example.storyapp.R
 
 class LogButton : AppCompatButton {
 

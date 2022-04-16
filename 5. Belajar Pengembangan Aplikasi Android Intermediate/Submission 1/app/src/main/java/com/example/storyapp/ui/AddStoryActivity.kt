@@ -1,4 +1,4 @@
-package com.example.storyapp
+package com.example.storyapp.ui
 
 import android.graphics.Bitmap
 import androidx.appcompat.app.AppCompatActivity

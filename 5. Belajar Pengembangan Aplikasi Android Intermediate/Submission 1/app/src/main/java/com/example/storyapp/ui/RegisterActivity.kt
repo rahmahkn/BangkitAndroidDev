@@ -1,28 +1,25 @@
-package com.example.storyapp
+package com.example.storyapp.ui
 
-import android.content.Context
+import android.content.ContentValues.TAG
 import android.content.Intent
-import android.graphics.Canvas
-import android.graphics.drawable.Drawable
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import android.text.Editable
 import android.text.TextWatcher
-import android.util.AttributeSet
 import android.util.Log
-import android.view.Gravity
-import android.view.MotionEvent
-import android.view.View
 import android.widget.EditText
 import android.widget.TextView
 import android.widget.Toast
-import androidx.appcompat.widget.AppCompatButton
-import androidx.appcompat.widget.AppCompatEditText
-import androidx.core.content.ContextCompat
-import com.example.storyapp.EmailEditText
-import com.example.storyapp.LogButton
-import com.example.storyapp.PasswordEditText
+import com.example.storyapp.components.EmailEditText
+import com.example.storyapp.components.LogButton
+import com.example.storyapp.components.PasswordEditText
 import com.example.storyapp.R
+import com.example.storyapp.databinding.ActivityRegisterBinding
+import com.example.storyapp.network.ApiConfig
+import com.example.storyapp.network.RegisterResponse
+import retrofit2.Call
+import retrofit2.Callback
+import retrofit2.Response
 
 class RegisterActivity : AppCompatActivity() {
     private lateinit var myButton: LogButton
@@ -30,12 +27,16 @@ class RegisterActivity : AppCompatActivity() {
     private lateinit var emailEditText: EmailEditText
     private lateinit var passwordEditText: PasswordEditText
     private lateinit var linkLoginText: TextView
+    private lateinit var binding: ActivityRegisterBinding
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        setContentView(R.layout.activity_register)
+        binding = ActivityRegisterBinding.inflate(layoutInflater)
+        setContentView(binding.root)
+//        setContentView(R.layout.activity_register)
 
         myButton = findViewById(R.id.register_button)
+        myButton.text = R.string.register.toString()
         nameEditText = findViewById(R.id.name_edit_text)
         emailEditText = findViewById(R.id.email_edit_text)
         passwordEditText = findViewById(R.id.password_edit_text)
@@ -79,9 +80,13 @@ class RegisterActivity : AppCompatActivity() {
             }
         })
 
-        myButton.setOnClickListener {
-            Toast.makeText(this@RegisterActivity, emailEditText.text, Toast.LENGTH_SHORT).show()
+        myButton.setOnClickListener { view ->
+//            Toast.makeText(this@RegisterActivity, emailEditText.text, Toast.LENGTH_SHORT).show()
             emailEditText.text?.clear()
+            nameEditText.text?.clear()
+            passwordEditText.text?.clear()
+
+            postRegister(nameEditText.text.toString(), emailEditText.text.toString(), passwordEditText.text.toString())
         }
 
         linkLoginText.setOnClickListener {
@@ -92,5 +97,28 @@ class RegisterActivity : AppCompatActivity() {
     private fun setMyButtonEnable() {
         val result = emailEditText.text
         myButton.isEnabled = result != null && result.toString().isNotEmpty()
+    }
+
+    private fun postRegister(name: String, email: String, password: String) {
+//        showLoading(true)
+        val client = ApiConfig.getApiService().postRegister(name, email, password)
+        client.enqueue(object : Callback<RegisterResponse> {
+            override fun onResponse(
+                call: Call<RegisterResponse>,
+                response: Response<RegisterResponse>
+            ) {
+//                showLoading(false)
+                val responseBody = response.body()
+                if (response.isSuccessful && responseBody != null) {
+                    Toast.makeText(this@RegisterActivity, "Success registering ${email}", Toast.LENGTH_SHORT).show()
+                } else {
+                    Log.e(TAG, "onFailure: ${response.message()}")
+                }
+            }
+            override fun onFailure(call: Call<RegisterResponse>, t: Throwable) {
+//                showLoading(false)
+                Log.e(TAG, "onFailure: ${t.message}")
+            }
+        })
     }
 }

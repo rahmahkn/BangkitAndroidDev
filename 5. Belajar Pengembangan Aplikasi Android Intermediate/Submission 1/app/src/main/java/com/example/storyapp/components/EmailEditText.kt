@@ -1,4 +1,4 @@
-package com.example.storyapp
+package com.example.storyapp.components
 
 import android.content.Context
 import android.graphics.drawable.Drawable
@@ -9,9 +9,11 @@ import android.view.MotionEvent
 import android.view.View
 import androidx.appcompat.widget.AppCompatEditText
 import androidx.core.content.ContextCompat
+import com.example.storyapp.R
 
-class PasswordEditText : AppCompatEditText, View.OnTouchListener {
+class EmailEditText : AppCompatEditText, View.OnTouchListener {
     private lateinit var clearButtonImage: Drawable
+    private val emailPattern = "[a-zA-Z0-9._-]+@[a-z]+\\.+[a-z]+"
 
     constructor(context: Context) : super(context) {
         init()
@@ -36,9 +38,11 @@ class PasswordEditText : AppCompatEditText, View.OnTouchListener {
             override fun onTextChanged(s: CharSequence, start: Int, before: Int, count: Int) {
                 if (s.toString().isNotEmpty()) showClearButton() else hideClearButton()
             }
-
             override fun afterTextChanged(s: Editable) {
-                if (s.toString().length < 6) error = "Password minimal terdiri dari 6 karakter"
+                // Do nothing.
+                if (!s.toString().matches(emailPattern.toRegex())) {
+                    error = "Email yang Anda masukkan tidak valid"
+                }
             }
         })
     }
@@ -82,12 +86,16 @@ class PasswordEditText : AppCompatEditText, View.OnTouchListener {
             if (isClearButtonClicked) {
                 when (event.action) {
                     MotionEvent.ACTION_DOWN -> {
-                        clearButtonImage = ContextCompat.getDrawable(context, R.drawable.ic_baseline_close_24) as Drawable
+                        clearButtonImage = ContextCompat.getDrawable(context,
+                            R.drawable.ic_baseline_close_24
+                        ) as Drawable
                         showClearButton()
                         return true
                     }
                     MotionEvent.ACTION_UP -> {
-                        clearButtonImage = ContextCompat.getDrawable(context, R.drawable.ic_baseline_close_24) as Drawable
+                        clearButtonImage = ContextCompat.getDrawable(context,
+                            R.drawable.ic_baseline_close_24
+                        ) as Drawable
                         when {
                             text != null -> text?.clear()
                         }

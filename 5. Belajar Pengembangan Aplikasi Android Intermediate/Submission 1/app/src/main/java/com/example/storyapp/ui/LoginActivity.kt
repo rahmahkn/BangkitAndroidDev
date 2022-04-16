@@ -1,23 +1,16 @@
-package com.example.storyapp
+package com.example.storyapp.ui
 
-import android.content.Context
 import android.content.Intent
-import android.graphics.Canvas
-import android.graphics.drawable.Drawable
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import android.text.Editable
 import android.text.TextWatcher
-import android.util.AttributeSet
-import android.util.Log
-import android.view.Gravity
-import android.view.MotionEvent
-import android.view.View
 import android.widget.TextView
 import android.widget.Toast
-import androidx.appcompat.widget.AppCompatButton
-import androidx.appcompat.widget.AppCompatEditText
-import androidx.core.content.ContextCompat
+import com.example.storyapp.components.EmailEditText
+import com.example.storyapp.components.LogButton
+import com.example.storyapp.components.PasswordEditText
+import com.example.storyapp.R
 
 class LoginActivity : AppCompatActivity() {
     private lateinit var myButton: LogButton

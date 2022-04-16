@@ -1,9 +1,9 @@
-package com.example.storyapp
+package com.example.storyapp.ui
 
 import android.content.Intent
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
-import android.widget.TextView
+import com.example.storyapp.R
 import com.google.android.material.floatingactionbutton.FloatingActionButton
 
 class StoryActivity : AppCompatActivity() {

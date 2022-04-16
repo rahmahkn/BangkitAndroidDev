@@ -4,7 +4,7 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context=".RegisterActivity">
+    tools:context=".ui.RegisterActivity">
 
     <TextView
         android:id="@+id/title_name"
@@ -38,7 +38,7 @@
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/name_edit_text"  />
 
-    <com.example.storyapp.EmailEditText
+    <com.example.storyapp.components.EmailEditText
         android:id="@+id/email_edit_text"
         android:layout_width="0dp"
         android:layout_height="wrap_content"
@@ -59,7 +59,7 @@
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/email_edit_text" />
 
-    <com.example.storyapp.PasswordEditText
+    <com.example.storyapp.components.PasswordEditText
         android:id="@+id/password_edit_text"
         android:layout_width="0dp"
         android:layout_height="wrap_content"
@@ -71,7 +71,7 @@
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/title_password" />
 
-    <com.example.storyapp.LogButton
+    <com.example.storyapp.components.LogButton
         android:id="@+id/register_button"
         android:layout_width="0dp"
         android:layout_height="wrap_content"
