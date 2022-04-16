@@ -33,15 +33,24 @@ class PasswordEditText : AppCompatEditText, View.OnTouchListener {
         addTextChangedListener(object : TextWatcher {
             override fun beforeTextChanged(s: CharSequence, start: Int, count: Int, after: Int) {
                 // Do nothing.
+                error = null
             }
             override fun onTextChanged(s: CharSequence, start: Int, before: Int, count: Int) {
-                if (s.toString().isNotEmpty()) showClearButton() else hideClearButton()
+                if (s.toString().isNotEmpty()) {
+                    showClearButton()
+                }
+                else {
+                    hideClearButton()
+                    error = null
+                }
+                if (s.toString().length < 6) error = "Password minimal terdiri dari 6 karakter"
             }
 
             override fun afterTextChanged(s: Editable) {
-                if (s.toString().length < 6) error = "Password minimal terdiri dari 6 karakter"
             }
         })
+
+        error = null
     }
 
     private fun showClearButton() {
@@ -64,6 +73,11 @@ class PasswordEditText : AppCompatEditText, View.OnTouchListener {
             bottomOfTheText
         )
     }
+
+    public fun removeError() {
+        error = null
+    }
+
     override fun onTouch(v: View?, event: MotionEvent): Boolean {
         if (compoundDrawables[2] != null) {
             val clearButtonStart: Float

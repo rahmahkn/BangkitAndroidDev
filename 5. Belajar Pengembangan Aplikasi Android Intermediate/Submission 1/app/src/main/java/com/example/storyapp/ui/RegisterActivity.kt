@@ -28,6 +28,9 @@ class RegisterActivity : AppCompatActivity() {
     private lateinit var passwordEditText: PasswordEditText
     private lateinit var linkLoginText: TextView
     private lateinit var binding: ActivityRegisterBinding
+    private lateinit var nameFinal: String
+    private lateinit var emailFinal: String
+    private lateinit var passwordFinal: String
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -36,7 +39,6 @@ class RegisterActivity : AppCompatActivity() {
 //        setContentView(R.layout.activity_register)
 
         myButton = findViewById(R.id.register_button)
-        myButton.text = R.string.register.toString()
         nameEditText = findViewById(R.id.name_edit_text)
         emailEditText = findViewById(R.id.email_edit_text)
         passwordEditText = findViewById(R.id.password_edit_text)
@@ -53,6 +55,8 @@ class RegisterActivity : AppCompatActivity() {
                 }
             }
             override fun afterTextChanged(s: Editable) {
+                emailFinal = emailEditText.text.toString()
+//                emailEditText.error = null
             }
         })
 
@@ -65,6 +69,8 @@ class RegisterActivity : AppCompatActivity() {
                 }
             }
             override fun afterTextChanged(s: Editable) {
+                passwordFinal = passwordEditText.text.toString()
+//                passwordEditText.error = null
             }
         })
 
@@ -77,16 +83,20 @@ class RegisterActivity : AppCompatActivity() {
                 }
             }
             override fun afterTextChanged(s: Editable) {
+                nameFinal = nameEditText.text.toString()
+//                nameEditText.error = null
             }
         })
 
-        myButton.setOnClickListener { view ->
+        myButton.setOnClickListener {
 //            Toast.makeText(this@RegisterActivity, emailEditText.text, Toast.LENGTH_SHORT).show()
+//            emailEditText.removeError()
+
+            postRegister(nameFinal, emailFinal, passwordFinal)
+
             emailEditText.text?.clear()
             nameEditText.text?.clear()
             passwordEditText.text?.clear()
-
-            postRegister(nameEditText.text.toString(), emailEditText.text.toString(), passwordEditText.text.toString())
         }
 
         linkLoginText.setOnClickListener {
@@ -94,6 +104,7 @@ class RegisterActivity : AppCompatActivity() {
             startActivity(loginIntent)
         }
     }
+
     private fun setMyButtonEnable() {
         val result = emailEditText.text
         myButton.isEnabled = result != null && result.toString().isNotEmpty()
@@ -110,15 +121,26 @@ class RegisterActivity : AppCompatActivity() {
 //                showLoading(false)
                 val responseBody = response.body()
                 if (response.isSuccessful && responseBody != null) {
+                    Log.e(TAG, "onSuccess: ${response.message()}")
                     Toast.makeText(this@RegisterActivity, "Success registering ${email}", Toast.LENGTH_SHORT).show()
+                    val loginIntent = Intent(this@RegisterActivity, LoginActivity::class.java)
+                    startActivity(loginIntent)
                 } else {
                     Log.e(TAG, "onFailure: ${response.message()}")
+                    emailEditText.error = "Email is already taken"
+                    Toast.makeText(this@RegisterActivity, "Email is already taken", Toast.LENGTH_SHORT).show()
                 }
             }
             override fun onFailure(call: Call<RegisterResponse>, t: Throwable) {
 //                showLoading(false)
                 Log.e(TAG, "onFailure: ${t.message}")
+                emailEditText.error = "Email is already taken"
             }
         })
+
+        emailEditText.error = null
+        passwordEditText.error = null
+        emailEditText.setCompoundDrawables(null, null, null, null);
+        passwordEditText.setCompoundDrawables(null, null, null, null);
     }
 }

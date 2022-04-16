@@ -34,17 +34,27 @@ class EmailEditText : AppCompatEditText, View.OnTouchListener {
         addTextChangedListener(object : TextWatcher {
             override fun beforeTextChanged(s: CharSequence, start: Int, count: Int, after: Int) {
                 // Do nothing.
+                error = null
             }
             override fun onTextChanged(s: CharSequence, start: Int, before: Int, count: Int) {
-                if (s.toString().isNotEmpty()) showClearButton() else hideClearButton()
-            }
-            override fun afterTextChanged(s: Editable) {
-                // Do nothing.
+                if (s.toString().isNotEmpty()) {
+                    showClearButton()
+                }
+                else {
+                    hideClearButton()
+                    error = null
+                }
                 if (!s.toString().matches(emailPattern.toRegex())) {
                     error = "Email yang Anda masukkan tidak valid"
                 }
             }
+            override fun afterTextChanged(s: Editable) {
+                // Do nothing.
+
+            }
         })
+
+        error = null
     }
 
     private fun showClearButton() {

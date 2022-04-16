@@ -15,4 +15,12 @@ interface ApiService {
         @Field("email") email: String,
         @Field("password") password: String
     ): Call<RegisterResponse>
+
+    @FormUrlEncoded
+//    @Headers("Authorization: token 12345")
+    @POST("login")
+    fun postLogin(
+        @Field("email") email: String,
+        @Field("password") password: String
+    ): Call<LoginResponse>
 }

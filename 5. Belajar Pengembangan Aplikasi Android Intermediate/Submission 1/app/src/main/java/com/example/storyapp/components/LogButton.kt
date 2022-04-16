@@ -31,7 +31,10 @@ class LogButton : AppCompatButton {
         setTextColor(txtColor)
         textSize = 12f
         gravity = Gravity.CENTER
-        text = context.getString(R.string.login)
+    }
+
+    public fun removeError() {
+        error = null
     }
 
     private fun init() {
