@@ -4,12 +4,15 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context=".ui.StoryActivity">
+    tools:context=".ui.StoryActivity"
+    android:background="#E1E3E5">
 
     <androidx.recyclerview.widget.RecyclerView
         android:id="@+id/rv_stories"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
+        tools:layout_editor_absoluteX="34dp"
+        tools:layout_editor_absoluteY="-38dp"
         tools:listitem="@layout/item_story" />
 
     <com.google.android.material.floatingactionbutton.FloatingActionButton

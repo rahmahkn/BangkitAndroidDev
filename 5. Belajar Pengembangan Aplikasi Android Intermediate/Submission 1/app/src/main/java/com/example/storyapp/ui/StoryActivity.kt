@@ -30,20 +30,21 @@ class StoryActivity : AppCompatActivity() {
         rvStories = findViewById(R.id.rv_stories)
         fabAdd = findViewById<FloatingActionButton>(R.id.fab_add)
         mTokenPreference = TokenPreference(this@StoryActivity)
+        val token = mTokenPreference.getToken()
 
         fabAdd.setOnClickListener {
             val addStoryIntent = Intent(this@StoryActivity, AddStoryActivity::class.java)
             startActivity(addStoryIntent)
         }
 
-        getStories()
+        getStories(token)
     }
 
-    private fun getStories() {
+    private fun getStories(token: String) {
 //        val tvError = R.layout.findViewById<TextView>(R.id.followers_error)
 //        showLoading(true)
 
-        val client = ApiConfig.getApiService().getStories("Bearer ${mTokenPreference.getToken()}")
+        val client = ApiConfig.getApiService().getStories("Bearer $token")
         client.enqueue(object : Callback<GetStoryResponse> {
             override fun onResponse(
                 call: Call<GetStoryResponse>,
@@ -60,6 +61,8 @@ class StoryActivity : AppCompatActivity() {
                         } else {
 //                            binding.mainError.visibility = View.GONE
                             rvStories.layoutManager = LinearLayoutManager(this@StoryActivity)
+
+                            val listStoryFinal = responseBody.listStory.sortedByDescending { it.createdAt }
                             val listStoriesAdapter = StoryAdapter(responseBody.listStory)
                             rvStories.adapter = listStoriesAdapter
 

@@ -40,6 +40,11 @@ class LoginActivity : AppCompatActivity() {
         linkRegisterText = findViewById(R.id.link_register)
         mTokenPreference = TokenPreference(this@LoginActivity)
 
+        if (mTokenPreference.getToken() != "") {
+            val storyIntent = Intent(this@LoginActivity, StoryActivity::class.java)
+            startActivity(storyIntent)
+        }
+
         setMyButtonEnable()
 
         emailEditText.addTextChangedListener(object : TextWatcher {
@@ -76,8 +81,8 @@ class LoginActivity : AppCompatActivity() {
         }
 
         linkRegisterText.setOnClickListener {
-            val loginIntent = Intent(this@LoginActivity, RegisterActivity::class.java)
-            startActivity(loginIntent)
+            val regIntent = Intent(this@LoginActivity, RegisterActivity::class.java)
+            startActivity(regIntent)
         }
     }
 
