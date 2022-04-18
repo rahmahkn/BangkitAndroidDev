@@ -7,4 +7,7 @@
     <string name="register">Register</string>
     <string name="belum_punya_akun">Belum punya akun?</string>
     <string name="sudah_punya_akun">Sudah punya akun?</string>
+    <!-- TODO: Remove or change this placeholder text -->
+    <string name="hello_blank_fragment">Hello blank fragment</string>
+    <string name="detail_foto">Detail Foto</string>
 </resources>

@@ -1,14 +1,12 @@
 package com.example.storyapp.network
 
 import retrofit2.Call
-import retrofit2.http.Field
-import retrofit2.http.FormUrlEncoded
-import retrofit2.http.Headers
-import retrofit2.http.POST
+import retrofit2.http.*
 
 interface ApiService {
+
+
     @FormUrlEncoded
-//    @Headers("Authorization: token 12345")
     @POST("register")
     fun postRegister(
         @Field("name") name: String,
@@ -17,10 +15,14 @@ interface ApiService {
     ): Call<RegisterResponse>
 
     @FormUrlEncoded
-//    @Headers("Authorization: token 12345")
     @POST("login")
     fun postLogin(
         @Field("email") email: String,
         @Field("password") password: String
     ): Call<LoginResponse>
+
+    @GET("stories")
+    fun getStories(
+        @Header("Authorization") authHeader: String,
+    ): Call<GetStoryResponse>
 }

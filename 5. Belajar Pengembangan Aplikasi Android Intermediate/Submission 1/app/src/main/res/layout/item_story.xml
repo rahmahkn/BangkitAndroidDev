@@ -18,16 +18,19 @@
         android:paddingBottom="10dp">
 
         <ImageView
+            android:id="@+id/item_image"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             tools:src="@tools:sample/avatars"/>
 
         <TextView
+            android:id="@+id/item_name"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             tools:text="Nama"/>
 
         <TextView
+            android:id="@+id/item_description"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             tools:text="Deskripsi"/>
