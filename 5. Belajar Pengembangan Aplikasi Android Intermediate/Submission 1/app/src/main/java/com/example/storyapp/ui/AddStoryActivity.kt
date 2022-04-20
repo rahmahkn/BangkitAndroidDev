@@ -4,16 +4,16 @@ import android.Manifest
 import android.content.Intent
 import android.content.Intent.ACTION_GET_CONTENT
 import android.content.pm.PackageManager
-import android.graphics.Bitmap
 import android.graphics.BitmapFactory
 import android.net.Uri
-import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import android.provider.MediaStore
+import android.text.Editable
+import android.text.TextWatcher
 import android.widget.EditText
-import android.widget.TextView
 import android.widget.Toast
 import androidx.activity.result.contract.ActivityResultContracts
+import androidx.appcompat.app.AppCompatActivity
 import androidx.core.app.ActivityCompat
 import androidx.core.content.ContextCompat
 import androidx.core.content.FileProvider
@@ -36,6 +36,7 @@ class AddStoryActivity : AppCompatActivity() {
     private lateinit var binding: ActivityAddStoryBinding
     private var getFile: File? = null
     private lateinit var mTokenPreference: TokenPreference
+    private lateinit var etDesc: EditText
 
     companion object {
         const val CAMERA_X_RESULT = 200
@@ -96,7 +97,6 @@ class AddStoryActivity : AppCompatActivity() {
         setContentView(binding.root)
         mTokenPreference = TokenPreference(this@AddStoryActivity)
 
-
         if (!allPermissionsGranted()) {
             ActivityCompat.requestPermissions(
                 this,
@@ -104,6 +104,23 @@ class AddStoryActivity : AppCompatActivity() {
                 REQUEST_CODE_PERMISSIONS
             )
         }
+
+        etDesc = findViewById<EditText>(R.id.desc_edit_text)
+        binding.uploadButton.isEnabled = etDesc.text.toString().isNotEmpty()
+
+        etDesc.addTextChangedListener(object : TextWatcher {
+            override fun beforeTextChanged(s: CharSequence, start: Int, count: Int, after: Int) {
+            }
+
+            override fun onTextChanged(s: CharSequence, start: Int, before: Int, count: Int) {
+                if (etDesc.text!!.isNotEmpty()) {
+                    binding.uploadButton.isEnabled = true
+                }
+            }
+
+            override fun afterTextChanged(s: Editable) {
+            }
+        })
 
         binding.cameraXButton.setOnClickListener { startCameraX() }
         binding.cameraButton.setOnClickListener { startTakePhoto() }
@@ -120,8 +137,8 @@ class AddStoryActivity : AppCompatActivity() {
             val file = getFile as File
 
             val etDesc = findViewById<EditText>(R.id.desc_edit_text)
-//            val description = "Ini adalah deksripsi gambar".toRequestBody("text/plain".toMediaType())
             val description = etDesc.text.toString().toRequestBody("text/plain".toMediaType())
+
             val requestImageFile = file.asRequestBody("image/jpeg".toMediaTypeOrNull())
             val imageMultipart: MultipartBody.Part = MultipartBody.Part.createFormData(
                 "photo",
@@ -129,7 +146,8 @@ class AddStoryActivity : AppCompatActivity() {
                 requestImageFile
             )
 
-            val service = ApiConfig.getApiService().addStory("Bearer ${mTokenPreference.getToken()}", imageMultipart, description)
+            val service = ApiConfig.getApiService()
+                .addStory("Bearer ${mTokenPreference.getToken()}", imageMultipart, description)
             service.enqueue(object : Callback<AddStoryResponse> {
                 override fun onResponse(
                     call: Call<AddStoryResponse>,
@@ -138,18 +156,35 @@ class AddStoryActivity : AppCompatActivity() {
                     if (response.isSuccessful) {
                         val responseBody = response.body()
                         if (responseBody != null && !responseBody.error) {
-                            Toast.makeText(this@AddStoryActivity, responseBody.message, Toast.LENGTH_SHORT).show()
+                            Toast.makeText(
+                                this@AddStoryActivity,
+                                responseBody.message,
+                                Toast.LENGTH_SHORT
+                            ).show()
                         }
                     } else {
-                        Toast.makeText(this@AddStoryActivity, response.message(), Toast.LENGTH_SHORT).show()
+                        Toast.makeText(
+                            this@AddStoryActivity,
+                            response.message(),
+                            Toast.LENGTH_SHORT
+                        ).show()
                     }
                 }
+
                 override fun onFailure(call: Call<AddStoryResponse>, t: Throwable) {
-                    Toast.makeText(this@AddStoryActivity, "Gagal instance Retrofit", Toast.LENGTH_SHORT).show()
+                    Toast.makeText(
+                        this@AddStoryActivity,
+                        "Gagal instance Retrofit",
+                        Toast.LENGTH_SHORT
+                    ).show()
                 }
             })
         } else {
-            Toast.makeText(this@AddStoryActivity, "Silakan masukkan berkas gambar terlebih dahulu.", Toast.LENGTH_SHORT).show()
+            Toast.makeText(
+                this@AddStoryActivity,
+                "Silakan masukkan berkas gambar terlebih dahulu.",
+                Toast.LENGTH_SHORT
+            ).show()
         }
     }
 
@@ -194,7 +229,6 @@ class AddStoryActivity : AppCompatActivity() {
     }
 
     private fun startCameraX() {
-//        Toast.makeText(this, "Fitur ini belum tersedia", Toast.LENGTH_SHORT).show()
         val intent = Intent(this, CameraActivity::class.java)
         launcherIntentCameraX.launch(intent)
     }

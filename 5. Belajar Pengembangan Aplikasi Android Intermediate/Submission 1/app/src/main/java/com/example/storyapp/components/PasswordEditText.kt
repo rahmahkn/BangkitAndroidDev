@@ -22,40 +22,43 @@ class PasswordEditText : AppCompatEditText, View.OnTouchListener {
         init()
     }
 
-    constructor(context: Context, attrs: AttributeSet, defStyleAttr: Int) : super(context, attrs, defStyleAttr) {
+    constructor(context: Context, attrs: AttributeSet, defStyleAttr: Int) : super(
+        context,
+        attrs,
+        defStyleAttr
+    ) {
         init()
     }
 
     private fun init() {
-        clearButtonImage = ContextCompat.getDrawable(context, R.drawable.ic_baseline_close_24) as Drawable
+        clearButtonImage =
+            ContextCompat.getDrawable(context, R.drawable.ic_baseline_close_24) as Drawable
         setOnTouchListener(this)
 
         addTextChangedListener(object : TextWatcher {
             override fun beforeTextChanged(s: CharSequence, start: Int, count: Int, after: Int) {
                 // Do nothing.
-                error = null
             }
+
             override fun onTextChanged(s: CharSequence, start: Int, before: Int, count: Int) {
                 if (s.toString().isNotEmpty()) {
                     showClearButton()
-                }
-                else {
+                } else {
                     hideClearButton()
                     error = null
                 }
-                if (s.toString().length < 6) error = "Password minimal terdiri dari 6 karakter"
+                if (s.toString().length < 6) error = "Minimum 6 karakter"
             }
 
             override fun afterTextChanged(s: Editable) {
             }
         })
-
-        error = null
     }
 
     private fun showClearButton() {
         setButtonDrawables(endOfTheText = clearButtonImage)
     }
+
     private fun hideClearButton() {
         setButtonDrawables()
     }
@@ -65,7 +68,7 @@ class PasswordEditText : AppCompatEditText, View.OnTouchListener {
         topOfTheText: Drawable? = null,
         endOfTheText: Drawable? = null,
         bottomOfTheText: Drawable? = null
-    ){
+    ) {
         setCompoundDrawablesWithIntrinsicBounds(
             startOfTheText,
             topOfTheText,
@@ -97,14 +100,16 @@ class PasswordEditText : AppCompatEditText, View.OnTouchListener {
             if (isClearButtonClicked) {
                 when (event.action) {
                     MotionEvent.ACTION_DOWN -> {
-                        clearButtonImage = ContextCompat.getDrawable(context,
+                        clearButtonImage = ContextCompat.getDrawable(
+                            context,
                             R.drawable.ic_baseline_close_24
                         ) as Drawable
                         showClearButton()
                         return true
                     }
                     MotionEvent.ACTION_UP -> {
-                        clearButtonImage = ContextCompat.getDrawable(context,
+                        clearButtonImage = ContextCompat.getDrawable(
+                            context,
                             R.drawable.ic_baseline_close_24
                         ) as Drawable
                         when {

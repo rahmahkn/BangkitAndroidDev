@@ -1,17 +1,21 @@
 package com.example.storyapp.ui
 
 import android.content.ContentValues.TAG
+import android.content.Context
 import android.content.Intent
-import androidx.appcompat.app.AppCompatActivity
+import android.content.SharedPreferences
 import android.os.Bundle
 import android.util.Log
-import android.widget.Toast
+import android.view.Menu
+import android.view.MenuItem
+import android.view.View
+import android.widget.ProgressBar
+import androidx.appcompat.app.AppCompatActivity
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.example.storyapp.R
 import com.example.storyapp.network.ApiConfig
 import com.example.storyapp.network.GetStoryResponse
-import com.example.storyapp.network.ListStoryItem
 import com.example.storyapp.network.TokenPreference
 import com.google.android.material.floatingactionbutton.FloatingActionButton
 import retrofit2.Call
@@ -28,7 +32,7 @@ class StoryActivity : AppCompatActivity() {
         setContentView(R.layout.activity_story)
 
         rvStories = findViewById(R.id.rv_stories)
-        fabAdd = findViewById<FloatingActionButton>(R.id.fab_add)
+        fabAdd = findViewById(R.id.fab_add)
         mTokenPreference = TokenPreference(this@StoryActivity)
         val token = mTokenPreference.getToken()
 
@@ -40,9 +44,31 @@ class StoryActivity : AppCompatActivity() {
         getStories(token)
     }
 
+    override fun onCreateOptionsMenu(menu: Menu): Boolean {
+        menuInflater.inflate(R.menu.option_menu, menu)
+
+        return true
+    }
+
+    override fun onOptionsItemSelected(item: MenuItem): Boolean {
+        when (item.itemId) {
+            R.id.menu_logout -> {
+                val settings1: SharedPreferences =
+                    this@StoryActivity.getSharedPreferences("token_pref", Context.MODE_PRIVATE)
+                settings1.edit().clear().apply()
+
+                val settings2: SharedPreferences =
+                    this@StoryActivity.getSharedPreferences("session_pref", Context.MODE_PRIVATE)
+                settings2.edit().clear().apply()
+
+                startActivity(Intent(this, LoginActivity::class.java))
+            }
+        }
+        return true
+    }
+
     private fun getStories(token: String) {
-//        val tvError = R.layout.findViewById<TextView>(R.id.followers_error)
-//        showLoading(true)
+        showLoading(true)
 
         val client = ApiConfig.getApiService().getStories("Bearer $token")
         client.enqueue(object : Callback<GetStoryResponse> {
@@ -50,20 +76,19 @@ class StoryActivity : AppCompatActivity() {
                 call: Call<GetStoryResponse>,
                 response: Response<GetStoryResponse>
             ) {
-//                showLoading(false)
+                showLoading(false)
                 if (response.isSuccessful) {
                     val responseBody = response.body()
                     if (responseBody != null) {
-                        Log.d("GetStories", responseBody.listStory.toString())
 
                         if (responseBody.listStory.isEmpty()) {
                             Log.d("GetStories", "empty")
                         } else {
-//                            binding.mainError.visibility = View.GONE
                             rvStories.layoutManager = LinearLayoutManager(this@StoryActivity)
 
-                            val listStoryFinal = responseBody.listStory.sortedByDescending { it.createdAt }
-                            val listStoriesAdapter = StoryAdapter(responseBody.listStory)
+                            val listStoryFinal =
+                                responseBody.listStory.sortedByDescending { it.createdAt }
+                            val listStoriesAdapter = StoryAdapter(listStoryFinal)
                             rvStories.adapter = listStoriesAdapter
 
                         }
@@ -76,9 +101,19 @@ class StoryActivity : AppCompatActivity() {
             }
 
             override fun onFailure(call: Call<GetStoryResponse>, t: Throwable) {
-//                showLoading(false)
+                showLoading(false)
                 Log.e(TAG, "onFailure: ${t.message}")
             }
         })
+    }
+
+    private fun showLoading(isLoading: Boolean) {
+        val pgBar: ProgressBar = findViewById(R.id.progress_bar)
+
+        if (isLoading) {
+            pgBar.visibility = View.VISIBLE
+        } else {
+            pgBar.visibility = View.GONE
+        }
     }
 }

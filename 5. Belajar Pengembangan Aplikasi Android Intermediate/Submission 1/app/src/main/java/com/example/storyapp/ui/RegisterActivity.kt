@@ -2,18 +2,20 @@ package com.example.storyapp.ui
 
 import android.content.ContentValues.TAG
 import android.content.Intent
-import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import android.text.Editable
 import android.text.TextWatcher
 import android.util.Log
+import android.view.View
 import android.widget.EditText
+import android.widget.ProgressBar
 import android.widget.TextView
 import android.widget.Toast
+import androidx.appcompat.app.AppCompatActivity
+import com.example.storyapp.R
 import com.example.storyapp.components.EmailEditText
 import com.example.storyapp.components.LogButton
 import com.example.storyapp.components.PasswordEditText
-import com.example.storyapp.R
 import com.example.storyapp.databinding.ActivityRegisterBinding
 import com.example.storyapp.network.ApiConfig
 import com.example.storyapp.network.RegisterResponse
@@ -36,7 +38,6 @@ class RegisterActivity : AppCompatActivity() {
         super.onCreate(savedInstanceState)
         binding = ActivityRegisterBinding.inflate(layoutInflater)
         setContentView(binding.root)
-//        setContentView(R.layout.activity_register)
 
         myButton = findViewById(R.id.register_button)
         nameEditText = findViewById(R.id.name_edit_text)
@@ -49,49 +50,49 @@ class RegisterActivity : AppCompatActivity() {
         emailEditText.addTextChangedListener(object : TextWatcher {
             override fun beforeTextChanged(s: CharSequence, start: Int, count: Int, after: Int) {
             }
+
             override fun onTextChanged(s: CharSequence, start: Int, before: Int, count: Int) {
                 if (passwordEditText.text!!.isNotEmpty() && nameEditText.text!!.isNotEmpty()) {
                     setMyButtonEnable()
                 }
             }
+
             override fun afterTextChanged(s: Editable) {
                 emailFinal = emailEditText.text.toString()
-//                emailEditText.error = null
             }
         })
 
         passwordEditText.addTextChangedListener(object : TextWatcher {
             override fun beforeTextChanged(s: CharSequence, start: Int, count: Int, after: Int) {
             }
+
             override fun onTextChanged(s: CharSequence, start: Int, before: Int, count: Int) {
-                if (emailEditText.text!!.isNotEmpty()  && nameEditText.text!!.isNotEmpty()) {
+                if (emailEditText.text!!.isNotEmpty() && nameEditText.text!!.isNotEmpty()) {
                     setMyButtonEnable()
                 }
             }
+
             override fun afterTextChanged(s: Editable) {
                 passwordFinal = passwordEditText.text.toString()
-//                passwordEditText.error = null
             }
         })
 
         nameEditText.addTextChangedListener(object : TextWatcher {
             override fun beforeTextChanged(s: CharSequence, start: Int, count: Int, after: Int) {
             }
+
             override fun onTextChanged(s: CharSequence, start: Int, before: Int, count: Int) {
-                if (emailEditText.text!!.isNotEmpty()  && passwordEditText.text!!.isNotEmpty()) {
+                if (emailEditText.text!!.isNotEmpty() && passwordEditText.text!!.isNotEmpty()) {
                     setMyButtonEnable()
                 }
             }
+
             override fun afterTextChanged(s: Editable) {
                 nameFinal = nameEditText.text.toString()
-//                nameEditText.error = null
             }
         })
 
         myButton.setOnClickListener {
-//            Toast.makeText(this@RegisterActivity, emailEditText.text, Toast.LENGTH_SHORT).show()
-//            emailEditText.removeError()
-
             postRegister(nameFinal, emailFinal, passwordFinal)
 
             emailEditText.text?.clear()
@@ -111,28 +112,37 @@ class RegisterActivity : AppCompatActivity() {
     }
 
     private fun postRegister(name: String, email: String, password: String) {
-//        showLoading(true)
+        showLoading(true)
         val client = ApiConfig.getApiService().postRegister(name, email, password)
         client.enqueue(object : Callback<RegisterResponse> {
             override fun onResponse(
                 call: Call<RegisterResponse>,
                 response: Response<RegisterResponse>
             ) {
-//                showLoading(false)
+                showLoading(false)
                 val responseBody = response.body()
                 if (response.isSuccessful && responseBody != null) {
                     Log.e(TAG, "onSuccess: ${response.message()}")
-                    Toast.makeText(this@RegisterActivity, "Success registering ${email}", Toast.LENGTH_SHORT).show()
+                    Toast.makeText(
+                        this@RegisterActivity,
+                        "Success registering ${email}",
+                        Toast.LENGTH_SHORT
+                    ).show()
                     val loginIntent = Intent(this@RegisterActivity, LoginActivity::class.java)
                     startActivity(loginIntent)
                 } else {
                     Log.e(TAG, "onFailure: ${response.message()}")
                     emailEditText.error = "Email is already taken"
-                    Toast.makeText(this@RegisterActivity, "Email is already taken", Toast.LENGTH_SHORT).show()
+                    Toast.makeText(
+                        this@RegisterActivity,
+                        "Email is already taken",
+                        Toast.LENGTH_SHORT
+                    ).show()
                 }
             }
+
             override fun onFailure(call: Call<RegisterResponse>, t: Throwable) {
-//                showLoading(false)
+                showLoading(false)
                 Log.e(TAG, "onFailure: ${t.message}")
                 emailEditText.error = "Email is already taken"
             }
@@ -142,5 +152,15 @@ class RegisterActivity : AppCompatActivity() {
         passwordEditText.error = null
         emailEditText.setCompoundDrawables(null, null, null, null);
         passwordEditText.setCompoundDrawables(null, null, null, null);
+    }
+
+    private fun showLoading(isLoading: Boolean) {
+        val pgBar: ProgressBar = findViewById(R.id.progress_bar)
+
+        if (isLoading) {
+            pgBar.visibility = View.VISIBLE
+        } else {
+            pgBar.visibility = View.GONE
+        }
     }
 }

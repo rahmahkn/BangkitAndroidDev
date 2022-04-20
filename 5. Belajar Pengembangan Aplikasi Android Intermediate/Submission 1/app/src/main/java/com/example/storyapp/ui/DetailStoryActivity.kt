@@ -12,6 +12,7 @@ class DetailStoryActivity : AppCompatActivity() {
     private lateinit var ivFoto: ImageView
     private lateinit var tvNama: TextView
     private lateinit var tvDeskripsi: TextView
+    private lateinit var tvTime: TextView
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -21,12 +22,14 @@ class DetailStoryActivity : AppCompatActivity() {
         ivFoto = binding.detailFoto
         tvNama = binding.detailNama
         tvDeskripsi = binding.detailDeskripsi
+        tvTime = binding.detailWaktu
 
         Glide.with(this@DetailStoryActivity)
             .load(intent.getStringExtra(EXTRA_IMAGE))
             .into(binding.detailFoto)
         tvNama.text = intent.getStringExtra(EXTRA_NAME)
         tvDeskripsi.text = intent.getStringExtra(EXTRA_DESC)
+        tvTime.text = intent.getStringExtra(EXTRA_TIME)
     }
 
     companion object {
@@ -34,5 +37,6 @@ class DetailStoryActivity : AppCompatActivity() {
         const val EXTRA_IMAGE = "extra_image"
         const val EXTRA_NAME = "extra_name"
         const val EXTRA_DESC = "extra_desc"
+        const val EXTRA_TIME = "extra_time"
     }
 }
