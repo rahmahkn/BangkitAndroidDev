@@ -61,6 +61,8 @@ class StoryActivity : AppCompatActivity() {
                     this@StoryActivity.getSharedPreferences("session_pref", Context.MODE_PRIVATE)
                 settings2.edit().clear().apply()
 
+                finish()
+
                 startActivity(Intent(this, LoginActivity::class.java))
             }
         }

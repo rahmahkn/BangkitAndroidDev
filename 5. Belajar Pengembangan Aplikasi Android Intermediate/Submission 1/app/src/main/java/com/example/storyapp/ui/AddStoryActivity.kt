@@ -127,8 +127,6 @@ class AddStoryActivity : AppCompatActivity() {
         binding.galleryButton.setOnClickListener { startGallery() }
         binding.uploadButton.setOnClickListener {
             addStory()
-            val storyIntent = Intent(this@AddStoryActivity, StoryActivity::class.java)
-            startActivity(storyIntent)
         }
     }
 
@@ -161,6 +159,11 @@ class AddStoryActivity : AppCompatActivity() {
                                 responseBody.message,
                                 Toast.LENGTH_SHORT
                             ).show()
+
+                            finish()
+                            val storyIntent = Intent(this@AddStoryActivity, StoryActivity::class.java)
+                            storyIntent.flags = Intent.FLAG_ACTIVITY_CLEAR_TOP
+                            startActivity(storyIntent)
                         }
                     } else {
                         Toast.makeText(

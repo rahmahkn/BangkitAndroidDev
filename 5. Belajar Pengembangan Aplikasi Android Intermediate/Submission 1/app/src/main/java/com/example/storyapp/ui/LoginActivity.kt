@@ -20,6 +20,7 @@ import com.example.storyapp.components.PasswordEditText
 import com.example.storyapp.databinding.ActivityLoginBinding
 import com.example.storyapp.network.ApiConfig
 import com.example.storyapp.network.LoginResponse
+import com.example.storyapp.network.SessionPreference
 import com.example.storyapp.network.TokenPreference
 import retrofit2.Call
 import retrofit2.Callback
@@ -34,6 +35,7 @@ class LoginActivity : AppCompatActivity() {
     private lateinit var emailFinal: String
     private lateinit var passwordFinal: String
     private lateinit var mTokenPreference: TokenPreference
+    private lateinit var mSessionPreference: SessionPreference
     private lateinit var binding: ActivityLoginBinding
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -46,10 +48,14 @@ class LoginActivity : AppCompatActivity() {
         passwordEditText = findViewById(R.id.password_edit_text)
         linkRegisterText = findViewById(R.id.link_register)
         mTokenPreference = TokenPreference(this@LoginActivity)
+        mSessionPreference = SessionPreference(this@LoginActivity)
 
-        if (mTokenPreference.getSession() == "logged in") {
+        if (mSessionPreference.getSession() == "LOGGED") {
+            Log.d("Sudah login", "Yes")
             val storyIntent = Intent(this@LoginActivity, StoryActivity::class.java)
             startActivity(storyIntent)
+
+            finish()
         }
 
         setMyButtonEnable()
@@ -86,8 +92,6 @@ class LoginActivity : AppCompatActivity() {
 
         myButton.setOnClickListener {
             postLogin(emailFinal, passwordFinal)
-            emailEditText.text?.clear()
-            passwordEditText.text?.clear()
         }
 
         linkRegisterText.setOnClickListener {
@@ -135,7 +139,8 @@ class LoginActivity : AppCompatActivity() {
                         .show()
 
                     mTokenPreference.setToken(responseBody.loginResult.token)
-                    mTokenPreference.setSession("logged in")
+                    mSessionPreference.setSession()
+                    finish()
 
                     val storyIntent = Intent(this@LoginActivity, StoryActivity::class.java)
                     startActivity(storyIntent)
@@ -147,6 +152,9 @@ class LoginActivity : AppCompatActivity() {
                     ).show()
                     emailEditText.error = response.message()
                     Log.e(ContentValues.TAG, "onFailure: ${response.message()}")
+
+                    emailEditText.text?.clear()
+                    passwordEditText.text?.clear()
                 }
             }
 

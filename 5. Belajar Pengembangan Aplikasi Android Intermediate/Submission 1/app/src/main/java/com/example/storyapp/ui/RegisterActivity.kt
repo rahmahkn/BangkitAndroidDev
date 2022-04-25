@@ -94,10 +94,6 @@ class RegisterActivity : AppCompatActivity() {
 
         myButton.setOnClickListener {
             postRegister(nameFinal, emailFinal, passwordFinal)
-
-            emailEditText.text?.clear()
-            nameEditText.text?.clear()
-            passwordEditText.text?.clear()
         }
 
         linkLoginText.setOnClickListener {
@@ -128,6 +124,7 @@ class RegisterActivity : AppCompatActivity() {
                         "Success registering ${email}",
                         Toast.LENGTH_SHORT
                     ).show()
+                    finish()
                     val loginIntent = Intent(this@RegisterActivity, LoginActivity::class.java)
                     startActivity(loginIntent)
                 } else {
@@ -138,6 +135,10 @@ class RegisterActivity : AppCompatActivity() {
                         "Email is already taken",
                         Toast.LENGTH_SHORT
                     ).show()
+
+                    emailEditText.text?.clear()
+                    nameEditText.text?.clear()
+                    passwordEditText.text?.clear()
                 }
             }
 
