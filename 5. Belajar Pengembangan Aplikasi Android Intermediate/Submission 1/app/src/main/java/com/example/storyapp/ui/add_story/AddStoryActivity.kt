@@ -1,4 +1,4 @@
-package com.example.storyapp.ui
+package com.example.storyapp.ui.add_story
 
 import android.Manifest
 import android.content.Intent
@@ -22,6 +22,7 @@ import com.example.storyapp.databinding.ActivityAddStoryBinding
 import com.example.storyapp.network.AddStoryResponse
 import com.example.storyapp.network.ApiConfig
 import com.example.storyapp.network.TokenPreference
+import com.example.storyapp.ui.story.StoryActivity
 import okhttp3.MediaType.Companion.toMediaType
 import okhttp3.MediaType.Companion.toMediaTypeOrNull
 import okhttp3.MultipartBody

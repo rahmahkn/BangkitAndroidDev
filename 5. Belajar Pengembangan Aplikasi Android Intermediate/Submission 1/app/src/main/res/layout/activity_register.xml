@@ -7,7 +7,7 @@
     android:layout_gravity="center"
     android:paddingHorizontal="40dp"
     android:paddingTop="100dp"
-    tools:context=".ui.RegisterActivity">
+    tools:context=".ui.auth.RegisterActivity">
 
     <ProgressBar
         android:id="@+id/progress_bar"

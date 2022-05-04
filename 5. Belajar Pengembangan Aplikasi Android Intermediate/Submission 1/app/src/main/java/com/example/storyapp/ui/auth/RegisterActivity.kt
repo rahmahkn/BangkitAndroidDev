@@ -1,4 +1,4 @@
-package com.example.storyapp.ui
+package com.example.storyapp.ui.auth
 
 import android.content.ContentValues.TAG
 import android.content.Intent

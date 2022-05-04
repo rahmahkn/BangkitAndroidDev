@@ -7,7 +7,7 @@
     android:layout_gravity="center"
     android:paddingHorizontal="40dp"
     android:paddingTop="100dp"
-    tools:context=".ui.LoginActivity">
+    tools:context=".ui.auth.LoginActivity">
 
     <ImageView
         android:id="@+id/logo"

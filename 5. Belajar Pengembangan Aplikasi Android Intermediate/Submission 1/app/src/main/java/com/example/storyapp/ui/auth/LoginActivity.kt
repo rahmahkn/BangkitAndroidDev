@@ -1,4 +1,4 @@
-package com.example.storyapp.ui
+package com.example.storyapp.ui.auth
 
 import android.animation.AnimatorSet
 import android.animation.ObjectAnimator
@@ -22,6 +22,7 @@ import com.example.storyapp.network.ApiConfig
 import com.example.storyapp.network.LoginResponse
 import com.example.storyapp.network.SessionPreference
 import com.example.storyapp.network.TokenPreference
+import com.example.storyapp.ui.story.StoryActivity
 import retrofit2.Call
 import retrofit2.Callback
 import retrofit2.Response

@@ -1,4 +1,4 @@
-package com.example.storyapp.ui
+package com.example.storyapp.ui.add_story
 
 import android.app.Application
 import android.content.ContentResolver

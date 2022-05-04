@@ -1,4 +1,4 @@
-package com.example.storyapp.ui
+package com.example.storyapp.ui.story
 
 import android.os.Bundle
 import android.widget.ImageView
