@@ -9,7 +9,7 @@ import com.example.storyapp.network.ApiService
 
 class MainViewModel(private val api: ApiService, private val token: String) : ViewModel() {
     val quote = Pager(
-        config = PagingConfig(pageSize = 5),
+        config = PagingConfig(pageSize = 2),
         pagingSourceFactory = {
             StoryPagingDataSource(api, token)}).flow.cachedIn(viewModelScope)
 }

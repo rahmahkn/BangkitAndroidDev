@@ -35,11 +35,12 @@ class StoryPagingDataSource(
     override suspend fun load(params: LoadParams<Int>): LoadResult<Int, ListStoryItem> {
         val pageNumber = params.key ?: 1
         return try {
-            val pagedResponse = service.getStories("Bearer $token", 1)
+            val pagedResponse = service.getStories("Bearer $token", pageNumber)
+            var listStories = pagedResponse.listStory.sortedByDescending { it.createdAt }
             Log.d("GetStories", pagedResponse.toString())
 
             LoadResult.Page(
-                data = pagedResponse.listStory,
+                data = listStories,
                 prevKey = if (pageNumber == 1) null else pageNumber - 1,
                 nextKey = if (pagedResponse.listStory.isEmpty()) null else pageNumber + 1
             )

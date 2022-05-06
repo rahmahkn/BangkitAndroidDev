@@ -4,38 +4,47 @@ import android.content.Context
 import android.content.Intent
 import android.content.SharedPreferences
 import android.os.Bundle
+import android.util.Log
 import android.view.Menu
 import android.view.MenuItem
 import android.view.View
 import android.widget.ProgressBar
 import androidx.appcompat.app.AppCompatActivity
-import androidx.lifecycle.ViewModel
+import androidx.fragment.app.FragmentTransaction
+import androidx.lifecycle.ViewModelProvider
+import androidx.lifecycle.lifecycleScope
+import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.example.storyapp.R
 import com.example.storyapp.helper.MainViewModel
+import com.example.storyapp.helper.StoryViewModelFactory
+import com.example.storyapp.network.ApiService
+import com.example.storyapp.network.ListStoryItem
 import com.example.storyapp.network.TokenPreference
 import com.example.storyapp.ui.add_story.AddStoryActivity
 import com.example.storyapp.ui.auth.LoginActivity
+import com.google.android.gms.maps.CameraUpdateFactory
+import com.google.android.gms.maps.GoogleMap
+import com.google.android.gms.maps.OnMapReadyCallback
+import com.google.android.gms.maps.SupportMapFragment
+import com.google.android.gms.maps.model.LatLng
+import com.google.android.gms.maps.model.MarkerOptions
 import com.google.android.material.floatingactionbutton.FloatingActionButton
-import androidx.lifecycle.ViewModelProvider
-import androidx.lifecycle.ViewModelProviders
-import androidx.lifecycle.lifecycleScope
-import androidx.recyclerview.widget.LinearLayoutManager
-import com.example.storyapp.helper.StoryViewModelFactory
-import com.example.storyapp.network.ApiService
 import kotlinx.coroutines.flow.collectLatest
+import kotlinx.coroutines.flow.distinctUntilChangedBy
 import kotlinx.coroutines.launch
+import kotlinx.coroutines.runBlocking
 
-class StoryActivity : AppCompatActivity() {
+class StoryActivity : AppCompatActivity(), OnMapReadyCallback {
     private lateinit var rvStories: RecyclerView
     private lateinit var fabAdd: FloatingActionButton
     private lateinit var mTokenPreference: TokenPreference
-//    private val mainViewModel: MainViewModel by viewModels {
-//        ViewModelFactory("")
-//    }
     private lateinit var mainViewModel: MainViewModel
     private lateinit var storyAdapter: StoryAdapter
     private lateinit var token: String
+    private lateinit var mMap: GoogleMap
+    private lateinit var mapFragment: SupportMapFragment
+    private var IS_MAPS: Boolean = true
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -43,21 +52,21 @@ class StoryActivity : AppCompatActivity() {
 
         rvStories = findViewById(R.id.rv_stories)
         fabAdd = findViewById(R.id.fab_add)
-        mTokenPreference = TokenPreference(this@StoryActivity)
-        token = mTokenPreference.getToken()
 
-//        var factory = object : ViewModelProvider.Factory {
-//            override fun <T : ViewModel?> create(modelClass: Class<T>): T {
-//                return  MainViewModel() as T
-//            }
-//        }
-//        mainViewModel = ViewModelProvider(this)[MainViewModel::class.java]
-//        mainViewModel = ViewModelProviders(this).get(ViewModelProvider.Factory {
-//            override fun <T : ViewModel?> create(modelClass: Class<T>): T {
-//                @Suppress("UNCHECKED_CAST")
-//                return MainViewModel(storyRepository) as T
-//            }
-//        })[MainViewModel::class.java]
+        val manager = supportFragmentManager
+        val ft: FragmentTransaction = manager.beginTransaction()
+        mapFragment = manager.findFragmentById(R.id.map) as SupportMapFragment
+        mapFragment.getMapAsync(this)
+
+        if (IS_MAPS) {
+            rvStories.visibility = View.GONE
+            ft.show(mapFragment)
+            ft.commit()
+        } else {
+            rvStories.visibility = View.VISIBLE
+            ft.hide(mapFragment)
+            ft.commit()
+        }
 
         setupViewModel()
         setupView()
@@ -67,8 +76,27 @@ class StoryActivity : AppCompatActivity() {
             val addStoryIntent = Intent(this@StoryActivity, AddStoryActivity::class.java)
             startActivity(addStoryIntent)
         }
+    }
 
-//        getStories(token)
+    override fun onMapReady(googleMap: GoogleMap) {
+        mMap = googleMap
+        mMap.uiSettings.isZoomControlsEnabled = true
+        mMap.uiSettings.isZoomGesturesEnabled = true
+        var listStories = mutableListOf<ListStoryItem>()
+
+        lifecycleScope.launch {
+            storyAdapter.loadStateFlow
+                .collect {
+                    listStories.addAll(storyAdapter.snapshot().items)
+                    Log.d("listStories", listStories.toString())
+
+                    listStories.forEachIndexed { _, it ->
+                        mMap.addMarker(MarkerOptions().position(LatLng(it.lat, it.lon)).title(it.name))
+                        mMap.moveCamera(CameraUpdateFactory.newLatLng(LatLng(it.lat, it.lon)))
+                        mMap.animateCamera(CameraUpdateFactory.zoomTo(10.0f))
+                    }
+                }
+        }
     }
 
     private fun setupViewModel() {
@@ -83,7 +111,11 @@ class StoryActivity : AppCompatActivity() {
         storyAdapter = StoryAdapter()
         rvStories.apply {
             layoutManager = LinearLayoutManager(context)
-            adapter = storyAdapter
+            adapter = storyAdapter.withLoadStateFooter(
+                footer = LoadingStateAdapter {
+                    storyAdapter.retry()
+                }
+            )
             setHasFixedSize(true)
         }
         showLoading(true)
@@ -119,55 +151,24 @@ class StoryActivity : AppCompatActivity() {
 
                 startActivity(Intent(this, LoginActivity::class.java))
             }
+            R.id.menu_switch -> {
+                val manager = supportFragmentManager
+                val ft: FragmentTransaction = manager.beginTransaction()
+
+                if (!IS_MAPS) {
+                    IS_MAPS = true
+                    rvStories.visibility = View.GONE
+                    ft.show(mapFragment)
+                    ft.commit()
+                } else {
+                    IS_MAPS = false
+                    rvStories.visibility = View.VISIBLE
+                    ft.hide(mapFragment)
+                    ft.commit()
+                }
+            }
         }
         return true
-    }
-
-    private fun getStories(token: String) {
-//        showLoading(true)
-
-//        val adapter = StoryAdapter()
-//        rvStories.layoutManager = LinearLayoutManager(this@StoryActivity)
-//        rvStories.adapter = adapter
-//        mainViewModel.quote.observe(this) {
-//            adapter.submitData(lifecycle, it)
-//        }
-
-//        val client = ApiConfig.getApiService().getStories("Bearer $token")
-//        client.enqueue(object : Callback<GetStoryResponse> {
-//            override fun onResponse(
-//                call: Call<GetStoryResponse>,
-//                response: Response<GetStoryResponse>
-//            ) {
-//                showLoading(false)
-//                if (response.isSuccessful) {
-//                    val responseBody = response.body()
-//                    if (responseBody != null) {
-//
-//                        if (responseBody.listStory.isEmpty()) {
-//                            Log.d("GetStories", "empty")
-//                        } else {
-//                            rvStories.layoutManager = LinearLayoutManager(this@StoryActivity)
-//
-//                            val listStoryFinal =
-//                                responseBody.listStory.sortedByDescending { it.createdAt }
-//                            val listStoriesAdapter = StoryAdapter(listStoryFinal)
-//                            rvStories.adapter = listStoriesAdapter
-//
-//                        }
-//                    } else {
-//                        Log.d("Jumlah: ", "null")
-//                    }
-//                } else {
-//                    Log.e(TAG, "onFailure: ${response.message()}")
-//                }
-//            }
-//
-//            override fun onFailure(call: Call<GetStoryResponse>, t: Throwable) {
-//                showLoading(false)
-//                Log.e(TAG, "onFailure: ${t.message}")
-//            }
-//        })
     }
 
     private fun showLoading(isLoading: Boolean) {
