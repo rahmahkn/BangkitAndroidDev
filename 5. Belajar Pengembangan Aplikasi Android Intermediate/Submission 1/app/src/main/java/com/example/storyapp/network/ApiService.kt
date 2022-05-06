@@ -3,6 +3,9 @@ package com.example.storyapp.network
 import okhttp3.MultipartBody
 import okhttp3.RequestBody
 import retrofit2.Call
+import retrofit2.Response
+import retrofit2.Retrofit
+import retrofit2.converter.gson.GsonConverterFactory
 import retrofit2.http.*
 
 interface ApiService {
@@ -22,10 +25,10 @@ interface ApiService {
     ): Call<LoginResponse>
 
     @GET("stories")
-    fun getStories(
+    suspend fun getStories(
         @Header("Authorization") authHeader: String,
         @Query("location") location: Int
-    ): Call<GetStoryResponse>
+    ): GetStoryResponse
 
     @Multipart
     @POST("stories")
@@ -34,4 +37,15 @@ interface ApiService {
         @Part file: MultipartBody.Part,
         @Part("description") description: RequestBody,
     ): Call<AddStoryResponse>
+
+    companion object {
+
+        private const val BASE_URL = "https://story-api.dicoding.dev/v1/"
+
+        operator fun invoke(): ApiService = Retrofit.Builder()
+            .baseUrl(BASE_URL)
+            .addConverterFactory(GsonConverterFactory.create())
+            .build()
+            .create(ApiService::class.java)
+    }
 }

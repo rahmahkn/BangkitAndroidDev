@@ -19,7 +19,12 @@ import com.example.storyapp.ui.auth.LoginActivity
 import com.google.android.material.floatingactionbutton.FloatingActionButton
 import androidx.lifecycle.ViewModelProvider
 import androidx.lifecycle.ViewModelProviders
+import androidx.lifecycle.lifecycleScope
 import androidx.recyclerview.widget.LinearLayoutManager
+import com.example.storyapp.helper.StoryViewModelFactory
+import com.example.storyapp.network.ApiService
+import kotlinx.coroutines.flow.collectLatest
+import kotlinx.coroutines.launch
 
 class StoryActivity : AppCompatActivity() {
     private lateinit var rvStories: RecyclerView
@@ -29,6 +34,8 @@ class StoryActivity : AppCompatActivity() {
 //        ViewModelFactory("")
 //    }
     private lateinit var mainViewModel: MainViewModel
+    private lateinit var storyAdapter: StoryAdapter
+    private lateinit var token: String
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -37,14 +44,14 @@ class StoryActivity : AppCompatActivity() {
         rvStories = findViewById(R.id.rv_stories)
         fabAdd = findViewById(R.id.fab_add)
         mTokenPreference = TokenPreference(this@StoryActivity)
-        val token = mTokenPreference.getToken()
+        token = mTokenPreference.getToken()
 
 //        var factory = object : ViewModelProvider.Factory {
 //            override fun <T : ViewModel?> create(modelClass: Class<T>): T {
 //                return  MainViewModel() as T
 //            }
 //        }
-        mainViewModel = ViewModelProvider(this)[MainViewModel::class.java]
+//        mainViewModel = ViewModelProvider(this)[MainViewModel::class.java]
 //        mainViewModel = ViewModelProviders(this).get(ViewModelProvider.Factory {
 //            override fun <T : ViewModel?> create(modelClass: Class<T>): T {
 //                @Suppress("UNCHECKED_CAST")
@@ -52,12 +59,43 @@ class StoryActivity : AppCompatActivity() {
 //            }
 //        })[MainViewModel::class.java]
 
+        setupViewModel()
+        setupView()
+        setupList()
+
         fabAdd.setOnClickListener {
             val addStoryIntent = Intent(this@StoryActivity, AddStoryActivity::class.java)
             startActivity(addStoryIntent)
         }
 
-        getStories(token)
+//        getStories(token)
+    }
+
+    private fun setupViewModel() {
+        mTokenPreference = TokenPreference(this@StoryActivity)
+        token = mTokenPreference.getToken()
+        val factory = StoryViewModelFactory(ApiService(), token)
+        mainViewModel = ViewModelProvider(this, factory).get(MainViewModel::class.java)
+        showLoading(true)
+    }
+
+    private fun setupView() {
+        storyAdapter = StoryAdapter()
+        rvStories.apply {
+            layoutManager = LinearLayoutManager(context)
+            adapter = storyAdapter
+            setHasFixedSize(true)
+        }
+        showLoading(true)
+    }
+
+    private fun setupList() {
+        lifecycleScope.launch {
+            mainViewModel.quote.collectLatest { pagedData ->
+                storyAdapter.submitData(pagedData)
+            }
+        }
+        showLoading(false)
     }
 
     override fun onCreateOptionsMenu(menu: Menu): Boolean {
@@ -88,12 +126,12 @@ class StoryActivity : AppCompatActivity() {
     private fun getStories(token: String) {
 //        showLoading(true)
 
-        val adapter = StoryAdapter()
-        rvStories.layoutManager = LinearLayoutManager(this@StoryActivity)
-        rvStories.adapter = adapter
-        mainViewModel.quote.observe(this) {
-            adapter.submitData(lifecycle, it)
-        }
+//        val adapter = StoryAdapter()
+//        rvStories.layoutManager = LinearLayoutManager(this@StoryActivity)
+//        rvStories.adapter = adapter
+//        mainViewModel.quote.observe(this) {
+//            adapter.submitData(lifecycle, it)
+//        }
 
 //        val client = ApiConfig.getApiService().getStories("Bearer $token")
 //        client.enqueue(object : Callback<GetStoryResponse> {

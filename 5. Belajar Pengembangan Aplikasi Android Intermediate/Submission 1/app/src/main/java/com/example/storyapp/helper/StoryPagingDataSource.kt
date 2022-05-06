@@ -18,10 +18,6 @@ class StoryPagingDataSource(
     PagingSource<Int, ListStoryItem>() {
 
     val errorMessage = MutableLiveData<String>()
-    var job: Job? = null
-    val exceptionHandler = CoroutineExceptionHandler { _, throwable ->
-        onError("Exception handled: ${throwable.localizedMessage}")
-    }
     val loading = MutableLiveData<Boolean>()
 
     private fun onError(message: String) {
@@ -39,48 +35,16 @@ class StoryPagingDataSource(
     override suspend fun load(params: LoadParams<Int>): LoadResult<Int, ListStoryItem> {
         val pageNumber = params.key ?: 1
         return try {
-            var pagedResponse = listOf<ListStoryItem>()
-
-            job = CoroutineScope(Dispatchers.IO + exceptionHandler).launch {
-//                val response = mainRepository.getAllMovies()
-                withContext(Dispatchers.Main) {
-                    val client = ApiConfig.getApiService().getStories("Bearer $token", pageNumber)
-                    client.enqueue(object : Callback<GetStoryResponse> {
-                        override fun onResponse(
-                            call: Call<GetStoryResponse>,
-                            response: Response<GetStoryResponse>
-                        ) {
-                            if (response.isSuccessful) {
-                                val responseBody = response.body()
-                                if (responseBody != null) {
-
-                                    if (responseBody.listStory.isEmpty()) {
-                                        Log.d("GetStories", "empty")
-                                    } else {
-                                        pagedResponse = responseBody.listStory
-                                    }
-                                } else {
-                                    Log.d("Jumlah: ", "null")
-                                }
-                            } else {
-                                Log.e(TAG, "onFailure: ${response.message()}")
-                            }
-                        }
-
-                        override fun onFailure(call: Call<GetStoryResponse>, t: Throwable) {
-                            Log.e(TAG, "onFailure: ${t.message}")
-                        }
-                    })
-//                    pagedResponse = ApiConfig.getApiService().getStories("Bearer $token", pageNumber).listStory
-                }
-            }
+            val pagedResponse = service.getStories("Bearer $token", 1)
+            Log.d("GetStories", pagedResponse.toString())
 
             LoadResult.Page(
-                data = pagedResponse,
+                data = pagedResponse.listStory,
                 prevKey = if (pageNumber == 1) null else pageNumber - 1,
-                nextKey = if (pagedResponse.isEmpty()) null else pageNumber + 1
+                nextKey = if (pagedResponse.listStory.isEmpty()) null else pageNumber + 1
             )
         } catch (e: Exception) {
+            Log.d("GetStories", e.toString())
             LoadResult.Error(e)
         }
     }
