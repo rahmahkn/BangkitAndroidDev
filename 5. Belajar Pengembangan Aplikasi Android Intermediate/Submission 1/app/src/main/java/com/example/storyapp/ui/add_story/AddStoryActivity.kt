@@ -162,7 +162,8 @@ class AddStoryActivity : AppCompatActivity() {
                             ).show()
 
                             finish()
-                            val storyIntent = Intent(this@AddStoryActivity, StoryActivity::class.java)
+                            val storyIntent =
+                                Intent(this@AddStoryActivity, StoryActivity::class.java)
                             storyIntent.flags = Intent.FLAG_ACTIVITY_CLEAR_TOP
                             startActivity(storyIntent)
                         }

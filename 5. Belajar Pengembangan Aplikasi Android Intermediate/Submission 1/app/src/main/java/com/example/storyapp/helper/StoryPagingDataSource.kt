@@ -1,20 +1,16 @@
 package com.example.storyapp.helper
 
-import android.content.ContentValues.TAG
-import android.net.Uri
 import android.util.Log
 import androidx.lifecycle.MutableLiveData
 import androidx.paging.PagingSource
 import androidx.paging.PagingState
-import com.example.storyapp.network.*
-import kotlinx.coroutines.*
-import retrofit2.Call
-import retrofit2.Callback
-import retrofit2.Response
+import com.example.storyapp.network.ApiService
+import com.example.storyapp.network.ListStoryItem
 
 class StoryPagingDataSource(
     private val service: ApiService,
-    private val token: String) :
+    private val token: String
+) :
     PagingSource<Int, ListStoryItem>() {
 
     val errorMessage = MutableLiveData<String>()

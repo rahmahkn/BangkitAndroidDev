@@ -11,6 +11,7 @@ class MainViewModel(private val api: ApiService, private val token: String) : Vi
     val quote = Pager(
         config = PagingConfig(pageSize = 5),
         pagingSourceFactory = {
-            StoryPagingDataSource(api, token)}).flow.cachedIn(viewModelScope)
+            StoryPagingDataSource(api, token)
+        }).flow.cachedIn(viewModelScope)
 }
 

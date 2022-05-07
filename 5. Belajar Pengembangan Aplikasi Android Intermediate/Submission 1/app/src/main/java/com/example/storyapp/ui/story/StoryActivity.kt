@@ -9,7 +9,6 @@ import android.view.Menu
 import android.view.MenuItem
 import android.view.View
 import android.widget.ProgressBar
-import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
 import androidx.fragment.app.FragmentTransaction
 import androidx.lifecycle.ViewModelProvider
@@ -30,13 +29,10 @@ import com.google.android.gms.maps.OnMapReadyCallback
 import com.google.android.gms.maps.SupportMapFragment
 import com.google.android.gms.maps.model.LatLng
 import com.google.android.gms.maps.model.LatLngBounds
-import com.google.android.gms.maps.model.Marker
 import com.google.android.gms.maps.model.MarkerOptions
 import com.google.android.material.floatingactionbutton.FloatingActionButton
 import kotlinx.coroutines.flow.collectLatest
-import kotlinx.coroutines.flow.distinctUntilChangedBy
 import kotlinx.coroutines.launch
-import kotlinx.coroutines.runBlocking
 
 class StoryActivity : AppCompatActivity(), OnMapReadyCallback {
     private lateinit var rvStories: RecyclerView
@@ -47,7 +43,7 @@ class StoryActivity : AppCompatActivity(), OnMapReadyCallback {
     private lateinit var token: String
     private lateinit var mMap: GoogleMap
     private lateinit var mapFragment: SupportMapFragment
-    private var IS_MAPS: Boolean = true
+    private var IS_MAPS: Boolean = false
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -71,6 +67,7 @@ class StoryActivity : AppCompatActivity(), OnMapReadyCallback {
             ft.commit()
         }
 
+        showLoading(true)
         setupViewModel()
         setupView()
         setupList()
@@ -95,7 +92,12 @@ class StoryActivity : AppCompatActivity(), OnMapReadyCallback {
                     Log.d("listStories", listStories.toString())
 
                     listStories.forEachIndexed { _, it ->
-                        mMap.addMarker(MarkerOptions().position(LatLng(it.lat, it.lon)).title(it.name))
+                        mMap.addMarker(
+                            MarkerOptions()
+                                .position(LatLng(it.lat, it.lon))
+                                .title(it.name)
+                                .snippet(it.description)
+                        )
                         mMap.moveCamera(CameraUpdateFactory.newLatLng(LatLng(it.lat, it.lon)))
                         builder.include(LatLng(it.lat, it.lon))
                     }
@@ -103,6 +105,7 @@ class StoryActivity : AppCompatActivity(), OnMapReadyCallback {
 
             var bounds: LatLngBounds = builder.build()
             mMap.animateCamera(CameraUpdateFactory.newLatLngBounds(bounds, 30))
+            mMap.setInfoWindowAdapter(CustomInfoWindow(this@StoryActivity))
         }
     }
 
@@ -163,11 +166,13 @@ class StoryActivity : AppCompatActivity(), OnMapReadyCallback {
                 val ft: FragmentTransaction = manager.beginTransaction()
 
                 if (!IS_MAPS) {
+                    item.setIcon(R.drawable.ic_baseline_menu_24)
                     IS_MAPS = true
                     rvStories.visibility = View.GONE
                     ft.show(mapFragment)
                     ft.commit()
                 } else {
+                    item.setIcon(R.drawable.ic_baseline_location_on_24)
                     IS_MAPS = false
                     rvStories.visibility = View.VISIBLE
                     ft.hide(mapFragment)
