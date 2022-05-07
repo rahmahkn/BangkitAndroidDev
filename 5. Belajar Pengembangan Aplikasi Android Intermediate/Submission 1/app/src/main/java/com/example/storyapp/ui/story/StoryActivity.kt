@@ -9,6 +9,7 @@ import android.view.Menu
 import android.view.MenuItem
 import android.view.View
 import android.widget.ProgressBar
+import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
 import androidx.fragment.app.FragmentTransaction
 import androidx.lifecycle.ViewModelProvider
@@ -28,6 +29,8 @@ import com.google.android.gms.maps.GoogleMap
 import com.google.android.gms.maps.OnMapReadyCallback
 import com.google.android.gms.maps.SupportMapFragment
 import com.google.android.gms.maps.model.LatLng
+import com.google.android.gms.maps.model.LatLngBounds
+import com.google.android.gms.maps.model.Marker
 import com.google.android.gms.maps.model.MarkerOptions
 import com.google.android.material.floatingactionbutton.FloatingActionButton
 import kotlinx.coroutines.flow.collectLatest
@@ -83,6 +86,7 @@ class StoryActivity : AppCompatActivity(), OnMapReadyCallback {
         mMap.uiSettings.isZoomControlsEnabled = true
         mMap.uiSettings.isZoomGesturesEnabled = true
         var listStories = mutableListOf<ListStoryItem>()
+        var builder = LatLngBounds.Builder()
 
         lifecycleScope.launch {
             storyAdapter.loadStateFlow
@@ -93,9 +97,12 @@ class StoryActivity : AppCompatActivity(), OnMapReadyCallback {
                     listStories.forEachIndexed { _, it ->
                         mMap.addMarker(MarkerOptions().position(LatLng(it.lat, it.lon)).title(it.name))
                         mMap.moveCamera(CameraUpdateFactory.newLatLng(LatLng(it.lat, it.lon)))
-                        mMap.animateCamera(CameraUpdateFactory.zoomTo(10.0f))
+                        builder.include(LatLng(it.lat, it.lon))
                     }
                 }
+
+            var bounds: LatLngBounds = builder.build()
+            mMap.animateCamera(CameraUpdateFactory.newLatLngBounds(bounds, 30))
         }
     }
 
