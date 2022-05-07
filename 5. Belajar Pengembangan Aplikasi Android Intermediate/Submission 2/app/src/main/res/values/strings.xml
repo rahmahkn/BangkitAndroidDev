@@ -1,0 +1,15 @@
+<resources>
+    <string name="app_name">StoryApp</string>
+    <string name="email">Email</string>
+    <string name="password">Password</string>
+    <string name="login">Login</string>
+    <string name="name">Name</string>
+    <string name="register">Register</string>
+    <string name="belum_punya_akun">Belum punya akun?</string>
+    <string name="sudah_punya_akun">Sudah punya akun?</string>
+    <!-- TODO: Remove or change this placeholder text -->
+    <string name="hello_blank_fragment">Hello blank fragment</string>
+    <string name="detail_foto">Detail Foto</string>
+    <string name="coba_lagi">Coba Lagi</string>
+    <string name="title_activity_maps">MapsActivity</string>
+</resources>

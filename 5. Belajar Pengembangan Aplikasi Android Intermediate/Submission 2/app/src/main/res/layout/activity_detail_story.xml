@@ -1,0 +1,63 @@
+<?xml version="1.0" encoding="utf-8"?>
+<ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content">
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="vertical">
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="55dp"
+            android:gravity="center_vertical"
+            android:orientation="horizontal"
+            android:paddingHorizontal="15dp">
+
+            <ImageView
+                android:layout_width="30dp"
+                android:layout_height="30dp"
+                android:src="@drawable/ic_baseline_account_circle_24" />
+
+            <TextView
+                android:id="@+id/detail_nama"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:paddingStart="10dp"
+                android:textStyle="bold"
+                android:transitionName="nama"
+                tools:text="Nama" />
+        </LinearLayout>
+
+        <ImageView
+            android:id="@+id/detail_foto"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:adjustViewBounds="true"
+            android:contentDescription="@string/detail_foto"
+            android:scaleType="fitCenter"
+            android:src="@drawable/loading"
+            android:transitionName="foto" />
+
+        <TextView
+            android:id="@+id/detail_deskripsi"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:padding="10dp"
+            android:transitionName="deskripsi"
+            tools:text="Deskripsi" />
+
+        <TextView
+            android:id="@+id/detail_waktu"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="10dp"
+            android:paddingHorizontal="10dp"
+            android:textSize="10sp"
+            android:textStyle="italic"
+            android:transitionName="waktu"
+            tools:text="Posted on 22/04/2022 18:00" />
+    </LinearLayout>
+</ScrollView>
