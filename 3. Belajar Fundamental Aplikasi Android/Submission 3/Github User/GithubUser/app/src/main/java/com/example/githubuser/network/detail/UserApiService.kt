@@ -7,6 +7,6 @@ import retrofit2.http.Path
 
 interface UserApiService {
     @GET("users/{username}")
-    @Headers("Authorization: token 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")
+    @Headers("Authorization: token $TOKEN")
     fun getUser(@Path("username") username: String): Call<UserResponse>
 }
